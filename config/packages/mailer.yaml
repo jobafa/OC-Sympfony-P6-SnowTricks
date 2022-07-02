@@ -1,0 +1,7 @@
+framework:
+    mailer:
+        envelope:
+            sender: 'contact@capdeco.com'
+        headers:
+            From: 'Site SnowTricks <contact@capdeco.com>'
+        dsn: '%env(MAILER_DSN)%'

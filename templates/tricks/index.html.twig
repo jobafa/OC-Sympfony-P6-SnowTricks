@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TricksController!
+{% endblock %}
+
+{% block body %}
+
+	<section class="tricks">
+		{% for trick in tricks %}
+			<trick>
+				<h2>{{ trick.title }}</h2>
+				<div class="metadata">crée le
+					{{ trick.createdAt | date('d/m/y') }}
+					à{{ trick.createdAt | date('H:i') }}
+					dans la catégorie Flips</div>
+				<div class="content">
+					<img src="{{ trick.image }}" alt="">
+					{{ trick.content | raw }}
+					<a href="{{ path('trick_show', { 'id': trick.id })}}" class="btn btn-primary">lire la suite</a>
+				</div>
+			</trick>
+		{% endfor %}
+	</section>
+{% endblock %}

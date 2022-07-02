@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme formTrick 'bootstrap_5_layout.html.twig' %}
+
+{% block body %}
+	<h1>création d'une figure</h1>
+
+	<div class="container-fluid py-5 trick-bg">
+		{{ form_start(formTrick) }}
+		<div class="container px-0 pb-5" id="editPage">
+
+			{{ form_row(formTrick.category, {'attr': {'placeholder': "Titre de la Figure"}}) }}
+			{{ form_row(formTrick.title, {'attr': {'placeholder': "Titre de la Figure"}}) }}
+			{{ form_row(formTrick.content, {'attr': {'placeholder': "Contenu de la Figure"}}) }}
+			{{ form_row(formTrick.image, {'attr': {'placeholder': "URL de l'image"}}) }}
+			{{ form_row(formTrick.video, {'attr': {'placeholder': "URL de la video"}}) }}
+
+			<button type="submit" class="btn btn-primary">
+
+				{% if editMode %}
+					Mettre à Jour
+				{% else %}
+					Créer la Figure
+				{% endif %}
+
+			</button>
+		</div>
+		{{ form_end(formTrick) }}
+	</div>
+{% endblock %}

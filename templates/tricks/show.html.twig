@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+{% form_theme commentForm 'bootstrap_5_layout.html.twig' %}
+{% block body %}
+	<trick>
+		<h2>{{ trick.title }}</h2>
+		<div class="metadata">crée le
+			{{ trick.createdAt | date('d/m/y') }}
+			à{{ trick.createdAt | date('H:i') }}
+			dans la catégorie Flips</div>
+		<div class="content">
+			<img src="{{ trick.image }}" alt="">
+			{{ trick.content | raw}}
+		</div>
+	</trick>
+	<section id="commentaires">
+		<h1>{{ trick.comments | length }}
+			commentaires</h1>
+		{% for comment in trick.comments %}
+			<div class="comment">
+				<div class="row">
+					<div class="col-3">
+						{{ comment.author }}
+						(<small>créé le
+							{{ comment.createdAt | date ('d/m/y') }}</small>à{{ comment.createdAt | date('H:i') }})
+					</div>
+					<div class="col">
+						{{ comment.content | raw }}
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		{{ form_start(commentForm) }}
+		{% if app.user %}
+
+			{{ form_row(commentForm.author, {'attr': {'placeholder': "Votre Pseudo"}}) }}
+			{{ form_row(commentForm.content, {'attr': {'placeholder': "Votre commentaire"}}) }}
+
+			<button type="submit" class="btn btn-primary">
+				Commentez
+			</button>
+
+
+		{% else %}
+			<h6>Vous devez vous connecter pour poster des commentaires</h6>
+			{{ form_row(commentForm.author, {'attr': {'disabled': 'disabled'}}) }}
+			{{ form_row(commentForm.content, {'attr': {'disabled': 'disabled'}}) }}
+
+			<a href="{{ path('security_login') }}" class="btn btn-primary">Connectez vous</a>
+			<a href="{{ path('security_registration') }}" class="btn btn-primary">Créez un compte</a>
+		{% endif %}
+		{{ form_end(commentForm) }}
+	</section>
+{% endblock %}
