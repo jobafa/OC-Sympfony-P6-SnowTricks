@@ -1,24 +1,95 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TricksController!
+{% block title %}liste des Figures Snowtricks
 {% endblock %}
 
 {% block body %}
-
-	<section class="tricks">
+{# <div class="container-fluid mB-4 col-6">
+	
+	<div class=" justify-content-center text-center">
+		<div class="card" >
+			<div class="card-body">
+				<h5>Bienvenue sur le site communautaire des figures de snowboard !</h5>
+			</div>
+		</div>
+	</div>
+</div> #}
+<div class="container-fluid">
+	<div class="row justify-content-center"  id="tricks">
 		{% for trick in tricks %}
-			<trick>
-				<h2>{{ trick.title }}</h2>
-				<div class="metadata">crée le
-					{{ trick.createdAt | date('d/m/y') }}
-					à{{ trick.createdAt | date('H:i') }}
-					dans la catégorie Flips</div>
-				<div class="content">
-					<img src="{{ trick.image }}" alt="">
-					{{ trick.content | raw }}
-					<a href="{{ path('trick_show', { 'id': trick.id })}}" class="btn btn-primary">lire la suite</a>
-				</div>
-			</trick>
+					<!-- Display Tricks -->
+	 <div class="col-md-2 col-sm-4 mx-1 mb-4  tricks-div">
+			{#<div class="container"> #}
+			{# <tricks> 
+				<div class="card-deck"> #}
+					<div class="card" >
+						<div class="view overlay">
+							<a href="{{ path('trick_show', { 'id': trick.id, 'slug': trick.slug })}}" >
+								<img class="card-img img-fluid" src="../uploads/images/{{ trick.defaultimage }}"  alt="trick_{{ trick.title }}"/>
+								{# <a href="/trick/mute">
+									<img class="card-img-top rounded-0" src="/uploads/images/49d5e420e05f72e68ca46ba8f0128a05.jpeg" alt="Card image cap">
+								</a> #}
+							</a>
+						</div>
+						<div class="card-body ">
+
+						{#  <img src="/uploads/pictures/3e0f8423e0dd12517f9700f10817c75a.jpeg" class="rounded-circle" height="50px" width="50px"
+								alt="avatar"> #}
+							{# <div class="col-auto"> #}
+							{# <div class="col px-auto "> #}
+								<p class="card-title  my-1">{# <a href="{{ path('trick_show', { 'id': trick.id, 'slug': trick.slug })}}" class=" stretched-link"> #}{{ trick.title }}{# </a> #}
+								{# <i class="far fa-clock pr-2"></i><small>26/03/2021</small> #}
+								{% if app.user %}
+									{#<div class="col-4 px-auto "> #}
+										<a href="{{ path('trick_edit', {id: trick.id}) }}#ajoutfigure">
+											<i class="fas fa-pencil-alt   px-2" style='font-size:20px; color:green'></i>
+										</a>
+									{% if app.user.id == trick.user.id %}
+											<i class="fas fa-transporter-empty"></i>
+											<a class="ml-2" data-toggle="modal" data-target="#trickDeleteModal" data-action="{{ path('trick_delete', {'id': trick.id})}}" data-token="{{ csrf_token('delete_trick_' ~ trick.id) }}">
+												<i class="fas fa-trash-alt   px-2" style='font-size:20px; color:red'></i>
+												{# <i class="fas fa-trash-alt"></i> #}
+											</a>
+										{#</div> #}
+									{% endif %}
+								{% endif %}
+								
+								</p>
+								{# </div> #}
+							{# </div> #}
+						</div>
+					</div>
+			{# 	</div>
+			
+			</trick> #} 
+			
+		</div>
+		{% include "tricks/_modal_deletion.html.twig" %}
 		{% endfor %}
-	</section>
+		
+		
+		</div> 
+		<div class="row d-flex justify-content-center pb-0"> 
+		
+		{# LOAD MORE BUTTONS #}
+			<div class="col-md-4 offset-md-4 text-center" id="loadMoreCol">
+				<button type="button" class="loadMore" id="MoreTricks">
+					<i class="fas fa-spinner mx-1"></i>Afficher Plus</button>
+				<button type="button" class="loadMore" id="LessTricks">
+					<i class="fas fa-spinner mx-1"></i>Afficher Moins</button>
+			</div>
+		 {#<div class="col-md-4 offset-md-4 text-center mt-2" id="loadMoreCol">
+				<button type="button" class="d-md-block  loadMoreBtn" id="loadMoreResults">
+					<i class="fas fa-spinner mr-3"></i>Load more</button>
+				<button type="button" class="d-none  loadMoreBtn" id="loadLessResults">
+					<i class="fas fa-spinner mr-3"></i>Load less</button>
+			</div> #}
+			<div class="col-md-4">
+			<a href="#tricks" id="arrowUp">
+				<i class="fas fa-arrow-up"></i>
+			</a>
+		</div>
+	</div>
+</div>
+
 {% endblock %}

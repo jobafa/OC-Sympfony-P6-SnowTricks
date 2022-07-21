@@ -1,81 +1,159 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>
-			{% block title %}Welcome!
-			{% endblock %}
-		</title>
-		<link rel="stylesheet" href="public/css/styles.css">
-		<link rel="stylesheet" href="https://bootswatch.com/5/flatly/bootstrap.min.css">
-		<link
-		rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+<head>
+<meta charset="UTF-8">
+<title>
+	{% block title %}SnowTricks
+	{% endblock %}
+</title>
+{# <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">#}
+<link rel="stylesheet" href="https://bootswatch.com/5/flatly/bootstrap.min.css"> 
+{# <link
+			rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+ #}
+<!-- Custom CSS -->
+	{# #}<link
+	rel="stylesheet" href="{{ asset('css/styles.css') }}"> 
+	{# <link rel="stylesheet" href="css/styles.css"> #}
+	{##} <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"> 
+			<link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@531&display=swap" rel="stylesheet">
+			<link
+			href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+<link
+rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
 
-		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-		{% block stylesheets %}
-			{{ encore_entry_link_tags('app') }}
-		{% endblock %}
+{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+{% block stylesheets %}
+	{# {{ encore_entry_link_tags('app') }} #}
+{% endblock %}
 
-		{% block javascripts %}
-			{{ encore_entry_script_tags('app') }}
-		{% endblock %}
-	</head>
-	<body>
-		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-			<div class="container-fluid">
-				<a class="navbar-brand" href="{{ path('home') }}">SnowTricks</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
+{# {% block javascripts %}
+	{{ encore_entry_script_tags('app') }}
+{% endblock %} #}
+</head>
+<body>
+	{# <nav class="navbar navbar-expand-lg navbar-light  bg-white " id="mainNav"> #}
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" >
+		<div class="container-fluid">
+			<a class="navbar-brand" href="{{ path('home') }}"><img src="/images/logo.png"  alt="" style="height: 50px"> SnowTricks</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navbarCollapse" data-target="#navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-				<div class="collapse navbar-collapse" id="navbarColor01">
-					<ul class="navbar-nav me-auto">
+			<div class="collapse navbar-collapse justify-content-right" id="navbarCollapse">
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item">
+						<a class="nav-link " href="/tricks#tricks">Figures
+
+						</a>
+					</li>
+					{# <li class="nav-item">
+						<a class="nav-link" href="{{ path('trick_create') }}#ajoutfigure">Créer Figure</a>
+					</li> #}
+					{% if not app.user %}
 						<li class="nav-item">
-							<a class="nav-link " href="/tricks">Figures
-
-							</a>
+							<a class="nav-link" href="{{ path('security_login') }}#login">Connexion</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('trick_create') }}">Créer Figure</a>
+							<a class="nav-link" href="{{ path('user_registration') }}#register">Inscrivez Vous</a>
 						</li>
-						{% if not app.user %}
-							<li class="nav-item">
-								<a class="nav-link" href="{{ path('security_login') }}">Connexion</a>
-							</li>
-						{% else %}
-							<li class="nav-item">
-								<a class="nav-link" href="{{ path('security_logout') }}">Déconnexion</a>
-							</li>
-						{% endif %}
+					{% else %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('trick_create') }}#ajoutfigure">Créer Figure</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('security_logout') }}">Déconnexion</a>
+						</li>
+					{% endif %}
 
 
-					</ul>
-
-				</div>
-			</div>
-		</nav>
-		<div class="container">
-
-			<div class="row d-flex flex-column justify-content-center align-items-center" id="defaultimage" style="background: url('/images/backflip.jpg');">
-				<div class="py-2 px-3 mr-auto return-btn"></div>
+				</ul>
 
 			</div>
-			<header class="masthead">
-				<div class="container px-4 px-lg-1 h-100">
-					<div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
-						<div class="col-lg-8 align-self-end">
-							<h1 class="text-white font-weight-bold">Fathi abderrahim</h1>
-							<hr class="divider"/>
-						</div>
-						<div class="col-lg-8 align-self-baseline">
-							<p class="text-white-75 mb-5">Conception & Développement de Sites Web</p>
-							<!-- <a class="btn btn-bluedev btn-xl" href="#about">En Savoir Plus</a> -->
-						</div>
+		</div>
+	</nav>
+	
+	{% if (app.request.get('_route') != 'trick_show') and (app.request.get('_route') != 'trick_edit') %}
+		<header class="masthead d-none d-lg-block">
+		
+			<div class="container px-4 px-lg-1 h-100">
+				<div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
+					<div class="col-lg-8 align-self-end">
+						<h1 class="text-white font-weight-bold"  style="text-shadow: 2px 1px 1px #0469f6">SnowTricks</h1>
+						<hr class="divider"/>
+					</div>
+					<div class="col-lg-6 align-self-baseline">
+						<h4 class="text-white mb-5" style="text-shadow: 2px 1px 1px #0469f6">Le site communautaire de SnowBoard</h4>
+						
 					</div>
 				</div>
-			</header>
-		</div>
-		<div class="container"> {% block body %}{% endblock %}
+				
 			</div>
-		</body>
-	</html>
+			
+		</header>
+		<div class="col-md-4">
+			<a href="#tricks" >
+				<i class="fas fa-arrow-down"></i>
+			</a>
+		</div>
+		<div class="container-fluid mb-1 justify-content-center text-center">
+	
+			{# <div class=""> #}
+				<div class="card" >
+					<div class="card-body">
+						<h5>Bienvenue sur le site communautaire des figures de snowboard !</h5>
+					</div>
+					{% for message in app.flashes('success') %}
+						<div class="alert alert-success w-85 mt-5 text-center mx-auto">
+							{{ message }}
+						</div>
+					{% endfor %}
+					{% for message in app.flashes('error') %}
+						<div class="alert alert-danger w-85 mt-5 text-center mx-auto">
+							{{ message }}
+						</div>
+					{% endfor %}
+
+				</div>
+			{# </div> #}
+		</div>
+		
+	{% endif %}
+	
+	{# <ul>
+    <li>Current route (short version): <b>{{ app.request.get('_route') }}</b></li>
+    <li>Current route: <b>{{ app.request.attributes.get('_route') }}</b></li>
+</ul> #}
+		
+
+	{% block body %}{% endblock %}
+	
+		<!-- Footer -->
+	<footer class="container-fluid page-footer font-small mt-5">
+
+    <!-- Footer Elements -->
+
+	<div class="row">
+		<div class="text-center ">
+			<div class="mt-2 flex-center">
+				<a href="#"><strong>Mentions légales</strong></a>
+			</div>
+		</div>
+	<!-- Copyright -->
+	<div class="footer-copyright text-center py-2">© 2022 Copyright:
+		<a href="#"> capweb.com</a>
+	</div>
+	<!-- Copyright -->
+	</div>
+
+	</footer>
+
+	
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+	<script src="{{ asset('js/tricks.js') }}"></script> 
+{% block javascripts %}{% endblock %}
+</body>
+</html>
