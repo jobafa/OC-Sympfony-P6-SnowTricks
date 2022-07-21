@@ -2,14 +2,20 @@
 
 namespace App\Entity;
 
-use App\Repository\TrickRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TrickRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
+ * @UniqueEntity(
+ * fields = {"title"},
+ * message = "Cette figure existe déjà !"
+ * )
  */
 class Trick
 {
@@ -23,9 +29,9 @@ class Trick
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(
-     *      min = 10,
+     *      min = 5,
      *      max = 150,
-     *      minMessage = "Le titre De la figure doit contenir au moins  10  charactéres ",
+     *      minMessage = "Le titre De la figure doit contenir au moins  5  charactéres ",
      *      maxMessage = "Le titre De la figure doit contenir au plus  255  charactéres"
      * )
      */
@@ -40,12 +46,7 @@ class Trick
      */
     private $content;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Url(message = "cette  url : '{{ value }}' n'est pas valide !",)
-     */
-    private $image;
-
+    
     /**
      * @ORM\Column(type="datetime")
      */
@@ -67,14 +68,33 @@ class Trick
      */
     private $comments;
 
+    
+    /**
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="trick", orphanRemoval=true, cascade={"persist"})
+     */
+    private $images;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Video::class, mappedBy="trick", orphanRemoval=true, cascade={"persist"})
+     */
+    private $videos;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tricks")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $video;
+    private $defaultimage;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,6 +114,14 @@ class Trick
         return $this;
     }
 
+    public function getSlug(): string
+    {
+        $slug = new slugify();
+        //$slug = $this->slugger->slug($name, '-', 'en_GB');
+
+        return $slug->slugify($this->title);
+    }
+
     public function getContent(): ?string
     {
         return $this->content;
@@ -102,18 +130,6 @@ class Trick
     public function setContent(string $content): self
     {
         $this->content = $content;
-
-        return $this;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): self
-    {
-        $this->image = $image;
 
         return $this;
     }
@@ -192,6 +208,90 @@ class Trick
     public function setVideo(string $video): self
     {
         $this->video = $video;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Image>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getTrick() === $this) {
+                $image->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Video>
+     */
+    public function getVideos(): Collection
+    {
+        return $this->videos;
+    }
+
+    public function addVideo(Video $video): self
+    {
+        if (!$this->videos->contains($video)) {
+            $this->videos[] = $video;
+            $video->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideo(Video $video): self
+    {
+        if ($this->videos->removeElement($video)) {
+            // set the owning side to null (unless already changed)
+            if ($video->getTrick() === $this) {
+                $video->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getDefaultimage(): ?string
+    {
+        return $this->defaultimage;
+    }
+
+    public function setDefaultimage(?string $defaultimage): self
+    {
+        $this->defaultimage = $defaultimage;
 
         return $this;
     }

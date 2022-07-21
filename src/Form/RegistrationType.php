@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class RegistrationType extends AbstractType
@@ -19,6 +20,14 @@ class RegistrationType extends AbstractType
             ->add('confirmpassword', PasswordType::class)
             ->add('lastname')
             ->add('firstname')
+            ->add('photo', FileType::class, [
+                'label' => 'Avatar',
+                'attr' => [
+                    'placeholder' => "Charger la photo",
+                ] ,
+                'required' => false,
+                /* 'data_class' => null */
+            ])
             
         ;
     }

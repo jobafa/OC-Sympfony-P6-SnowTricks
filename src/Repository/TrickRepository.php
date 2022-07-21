@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Trick;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Trick>
@@ -38,6 +40,88 @@ class TrickRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    /**
+	 * Retrieve the list of tricks
+	 * @return void
+	 */
+	//private function getPaginatedTricks($page, $limit){
+    /* private function findBy(array $criteria, array $orderBy = null, $page = null, $limit = null){
+        $firstPage = ($page - 1) * $limit;
+
+		//$queryBuilder = $this->getTricksQueryBuilder();
+        
+		// Select the tricks
+		$queryBuilder = $this->createQueryBuilder('t')
+			//->addSelect('p');
+            ->orderBy('t.createdAt', $orderBy)
+            ->setFirstResult($firstPage)
+            ->setMaxResults($limit);
+            ;
+		
+		//Return the QueryBuilder
+		return $query->getQuery()->getResult();
+	} */
+
+    /**
+	 * Retrieve the list of tricks
+	 * @return QueryBuilder
+	 */
+	 private function getTricksQueryBuilder(){
+		// Select the tricks
+		$queryBuilder = $this->createQueryBuilder('t')
+			//->addSelect('p');
+            ->orderBy('t.createdAt', 'DESC');
+		// Add the package relation
+		//$queryBuilder->leftJoin('o.packages','p');
+		
+		// Add WHERE clause
+		//$queryBuilder->where('o.deleted = 0')
+		//	->andWhere('p.deleted = 0');
+		
+		//Return the QueryBuilder
+		return $queryBuilder;
+	} /**/
+
+    /**
+	 * Retrieve the list paginated tricks
+	 * @param $page
+	 * @return Paginator
+	 */
+
+    public function getTricks($page, $pageSize){
+		
+		$firstPage = ($page - 1) * $pageSize;
+
+		$queryBuilder = $this->getTricksQueryBuilder();
+        
+		
+		// Set the returned page
+		$queryBuilder->setFirstResult($firstPage);
+		$queryBuilder->setMaxResults($pageSize);
+		
+		// Generate the Query
+		$query = $queryBuilder->getQuery();
+		//dd($query);
+		// Generate the Paginator
+		$paginator = new Paginator($query, true);
+		return $paginator;
+	}
+
+	/* public function getTricks($firstpage,$maxpage){
+		$queryBuilder = $this->getTricksQueryBuilder();
+		
+		// Add the first and max page limits
+		$queryBuilder->setFirstResult($firstpage);
+		$queryBuilder->setMaxResults($maxpage);
+		
+		// Generate the Query
+		$query = $queryBuilder->getQuery();
+		
+		// Generate the Paginator
+		$paginator = new Paginator($query, true);
+		return $paginator;
+	} */
 
 //    /**
 //     * @return Trick[] Returns an array of Trick objects

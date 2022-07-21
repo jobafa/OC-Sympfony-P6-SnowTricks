@@ -22,15 +22,18 @@ class Image
      */
     private $name;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $imageurl;
+    
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $imagecaption;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="images")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $trick;
 
     public function getId(): ?int
     {
@@ -69,6 +72,18 @@ class Image
     public function setImagecaption(?string $imagecaption): self
     {
         $this->imagecaption = $imagecaption;
+
+        return $this;
+    }
+
+    public function getTrick(): ?Trick
+    {
+        return $this->trick;
+    }
+
+    public function setTrick(?Trick $trick): self
+    {
+        $this->trick = $trick;
 
         return $this;
     }
