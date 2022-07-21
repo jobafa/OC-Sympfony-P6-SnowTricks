@@ -16,27 +16,43 @@ security:
         in_database:
             entity:
                 class: App\Entity\User
-                property: email
+                property: username
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            #anonymous: true
             lazy: true
             #provider: users_in_memory
             provider: in_database
 
+            #custom_authenticators:
+                #- App\Security\ApiKeyAuthenticator
+
             user_checker: App\Security\UserChecker
+            #user_checker: App\Security\LoginFormAuthenticator
+            # Set as entry point the default authenticator of the application (LoginFormAuthenticator) to fix the issue
+            #entry_point: App\Security\UserChecker
+            entry_point: App\Security\FormLoginAuthenticator
 
             form_login:
                 login_path: security_login
                 check_path: security_login
                 enable_csrf: true
+                target_path_parameter: _target_path
+                #always_use_default_target_path: true
+                default_target_path: app_tricks
+                #use_referer: true
+            #user_checker: App\Security\UserChecker
                 
 
             logout:
                 path: security_logout
                 target: app_tricks
+            guard:
+                authenticators:
+                    - App\Security\FormLoginAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
