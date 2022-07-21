@@ -33,7 +33,7 @@ class UserChecker implements UserCheckerInterface
 
            // $this->addFlash('danger', 'Votre compte n\'est pas activé. consultez votre boite mail pour l\'activer !');
 
-            $this->render('security/login.html.twig');
+            //$this->render('security/login.html.twig');
         }
 
         // user account is expired, the user may be notified

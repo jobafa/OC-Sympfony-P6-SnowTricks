@@ -94,7 +94,7 @@ class UserService
     }
 
     /**
-     * password reinitialisation.
+     * password reset.
      *
      * @return void
      */
