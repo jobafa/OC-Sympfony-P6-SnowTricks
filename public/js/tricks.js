@@ -43,70 +43,30 @@ $(function() {
 
     });
 
-    /* ****** LoadMore comments button ***** */
 
-    var comments = $("div.trick-comment");
-    if (comments.length <= commentsPerPage) {
-        $("#loadMoreCommentsBtn").hide();
-    }
+    
+    /*-----------------------------------------------------------------------------------*/
 
-    for (var i = commentsPerPage; i <= comments.length - 1; i++) {
-        comments[i].remove();
-    }
+/*  /* Show trick media in small screen */
 
-    $("#loadMoreCommentsBtn").on("click", function(e) {
+/*-----------------------------------------------------------------------------------*/
+
+/* $(function () {
+    $("#showMedia").on('click', function (e) {
         e.preventDefault();
-        commentsPerPage += 5;
-        for (var i = 0; i <= commentsPerPage - 1; i++) {
-            $("#trickComments").append(comments[i]);
-        }
-        if (comments.length <= commentsPerPage) {
-            $("#loadMoreCommentsBtn").hide();
-        }
+        $("div.show-media").removeClass('d-none');
+        $("#showMedia").addClass('d-none');
+        $("#hideMedia").removeClass('d-none');
+    });
+    $("#hideMedia").on('click', function (e) {
+        e.preventDefault();
+        $("div.show-media").addClass('d-none');
+        $("#showMedia").removeClass('d-none');
+        $("#hideMedia").addClass('d-none');
     });
 
-
-
-    /* ********** Responsive ********* */
-
-    if (window.matchMedia("(max-width: 576px)").matches) {
-
-        // Navbar
-        $("#mainNav").removeClass("sticky-top").addClass("fixed-bottom");
-        $("#mainNavBar").removeClass("ml-auto");
-        $(".navbar-brand").remove();
-        $("#navHome").html("<i class='fas fa-home'></i>");
-        $("#navLogin").html("<i class='fas fa-sign-in-alt'></i>");
-        $("#navSignup").remove();
-        $("#navLogout").html("<i class='fas fa-sign-out-alt'></i>").removeClass("nav-separator");
-        $("#navTricks").html("<i class='fas fa-bookmark'></i>").removeClass("nav-separator");
-        $("#navDashboard").html("<i class='fas fa-user'></i>").removeClass("dropdown-item").addClass("nav-item nav-link");
-        $("#profileDropdown").replaceWith($("#navDashboard"));
-        $(".navbar-nav").css("flex-direction", "row").css("justify-content", "between");
-        $(".navbar").css("justify-content", "center");
-        $(".navbar-nav a:not('.navbar-nav a:last')").css("margin-right", "4rem");
-
-        // Dashboard navbar
-        $("#dashboard-nav").addClass("fixed-bottom");
-        $("#dashNavLogout").html("<i class='fas fa-sign-out-alt'></i>");
-        $("#dashNavTricks").html("<i class='fas fa-list'></i>");
-        $("#dashNavDashboard").html("<i class='fas fa-home'></i>");
-        $("#dashNavProfile").html("<i class='fas fa-user'></i>");
-        $("#dashNavComments").html("<i class='fas fa-comment-dots'></i>");
-        $("#dashNavStats").html("<i class='fas fa-chart-bar'></i>");
-        $("#dashNavUsers").html("<i class='fas fa-users'></i>");
-        $("#dashNavGroups").html("<i class='fas fa-tags'></i>");
-        $("#dashNavPass, #dashNavAdd").remove();
-        $("#dashboard-top a").html("<i class='fas fa-undo-alt mr-2'></i>");
-
-        // Login, Registration, ForgotPass
-        $(".login-form").prepend($(".login-div h1")).css("margin-top", "3rem");
-
-        $("#newTrickImages button").html("<i class='fas fa-plus mr-2'></i><i class='fas fa-images'></i>");
-        $("#newTrickVideos button").html("<i class='fas fa-plus mr-2'></i><i class='fas fa-video'></i>");
-    }
-
-
+}); */
+ 
     /* ******** trick page ****** */
 
     $("#trickPage #trickMedia button").click(function(e) {
@@ -125,7 +85,7 @@ $(function() {
     })
 
     /* ******** new/edit trick page ****** */
-    // Trick images upload
+    // Trick images upload and videos collection management
 
     $(document).on("change", ".custom-file-input", function() {
         let fileName = $(this).val().replace(/\\/g, "/").replace(/.*\//, "");
