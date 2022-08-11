@@ -30,18 +30,18 @@ class SecurityController extends AbstractController
      */
     private $mailSender;
 
-    public function __construct(UserService $userService, MailSender $mailSender, UserRepository $userRepository)
+   /*  public function __construct(UserService $userService, MailSender $mailSender, UserRepository $userRepository)
     {
         $this->userService = $userService;
         $this->mailSender = $mailSender;
         $this->userRepository = $userRepository;
     }
-
+ */
     /**
      * @Route("/inscription", name="security_registration")
      */
 
-    public function registration(Request $request) {
+   /*  public function registration(Request $request) {
         $user = new User();
 
         $form = $this->createForm(RegistrationType::class, $user);
@@ -56,17 +56,7 @@ class SecurityController extends AbstractController
             $isEmailSent = $this->mailSender->sendEmail( $user, ['url' => $url], 'activation');
 
             $this->addFlash('success', "Votre compte a été créé avec succès. Pour l'activer, merci de cliquer sur le lien envoyé sur votre email !");
-            // $hash = $encoder->encodePassword($user, $user->getPassword());
-//dd($url);
-            // $user->setPassword($hash);
-            // $user->setCreatedAt(new \DateTime());
-            // /*if(!$user->getId()){
-            //     $user->setCreatedAt(new \DateTime());
-            // }
-            // $user->setUpdatedAt(new \DateTime());*/
-
-            // $manager->persist($user);
-            // $manager->flush();
+            
 
             return $this->redirectToRoute('security_login');
 
@@ -75,12 +65,12 @@ class SecurityController extends AbstractController
         return $this->render('security/registration.html.twig', [
             'formRegister' => $form->createView()
         ]);
-    }
+    } */
 
     /**
      * @Route("/activation/{token}", name="security_activation")
      */
-    public function activation($token, UserRepository $user)
+   /*  public function activation($token, UserRepository $user)
     {
         // check if user exists
         $user = $user->findOneBy(['activationToken' => $token]);
@@ -98,12 +88,17 @@ class SecurityController extends AbstractController
 
         // redirect to login form
         return $this->redirectToRoute('security_login');
-    }
+    } */
 
     /**
      * @Route("/connexion", name="security_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils){
+    public function login(AuthenticationUtils $authenticationUtils, Request $request){
+
+        //$backToPrevious = $request->form->get('_target_path')->getData();
+        // if ($this->getUser()) {
+        //          return $this->redirectToRoute('target_path_parameter');
+        // }dd('target_path_parameter');
 
         //if($authenticationUtils->getLastAuthenticationError()){
 
@@ -115,6 +110,10 @@ class SecurityController extends AbstractController
             return $this->render('security/login.html.twig', [
                 'last_username' => $lastUsername,
                 'error' => $error,
+                '_fragment' => 'login',
+                'back_to_your_page' => $request->headers->get('referer')
+               // 'back_to_your_page' => 'http://127.0.0.1:8000/tricks/new'
+               
             ]);
         //}
         
@@ -134,7 +133,7 @@ class SecurityController extends AbstractController
      *
      * @return Response
      */
-    public function newPasswordRequest(Request $request)
+    /* public function newPasswordRequest(Request $request)
     {
         $form = $this->createForm(PassResetRequestType::class);
         $form->handleRequest($request);
@@ -149,16 +148,7 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('seurity_forgotpassword_request');
             }
             
-            /* try {
-                $token = $this->tokenGenerator->generateToken();
-                $user->setResetToken($token);
-                $this->entityManager->persist($user);
-                $this->entityManager->flush();
-    
-            } catch (\Exception $e) {
-                $this->addFlash('warning', $e->getMessage());
-                return $this->redirectToRoute('security_login');
-            } */
+      
 
             $token = $this->userService->passwordResetToken($user);
 
@@ -175,7 +165,7 @@ class SecurityController extends AbstractController
             'formpassrequest' => $form->createView(),
         ]);
     }
-
+ */
     /**
      * verify link token and displays new password form.
      *
@@ -185,7 +175,7 @@ class SecurityController extends AbstractController
      *
      * @return Response
      */
-    public function newPassword($token, Request $request)
+    /* public function newPassword($token, Request $request)
     {
         $user = $this->userRepository->findOneBy(['passresetToken' => $token]);
 
@@ -210,7 +200,7 @@ class SecurityController extends AbstractController
             'formnewpass' => $form->createView(),
         ]);
     }
-
+ */
     /**
      * @Route("/security", name="app_security")
      */

@@ -73,6 +73,11 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
             throw new CustomUserMessageAuthenticationException('Username could not be found.');
         }
 
+        if (null !== $user->getActivationToken()) {
+            throw new CustomUserMessageAuthenticationException('Votre compte n\'est pas activé. consultez votre boite mail pour l\'activer !');
+
+        }
+
         return $user;
     }
 
@@ -88,7 +93,16 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
         }
 
         //return new RedirectResponse($this->router->generate('homepage'));
-        return new RedirectResponse($request->get('_target_path'));
+        if($request->get('_target_path') 
+        && !empty($request->get('_target_path')) 
+        && !str_contains($request->get('_target_path'), 'reinitialisation')
+        && !str_contains($request->get('_target_path'), 'connexion')){
+
+            return new RedirectResponse($request->get('_target_path'));
+        }
+        
+        return new RedirectResponse($this->router->generate('home'));
+
     }
 
     protected function getLoginUrl()

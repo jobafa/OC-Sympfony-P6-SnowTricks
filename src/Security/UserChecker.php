@@ -28,13 +28,13 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        if (null !== $user->getActivationToken()) {
-            throw new \Exception('Votre compte n\'est pas activé. consultez votre boite mail pour l\'activer !');
+        // if (null !== $user->getActivationToken()) {
+        //     throw new \Exception('Votre compte n\'est pas activé. consultez votre boite mail pour l\'activer !');
 
            // $this->addFlash('danger', 'Votre compte n\'est pas activé. consultez votre boite mail pour l\'activer !');
 
             //$this->render('security/login.html.twig');
-        }
+        // }
 
         // user account is expired, the user may be notified
         //if ($user->isExpired()) {
