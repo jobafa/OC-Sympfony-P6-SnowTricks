@@ -8,11 +8,11 @@
 		<div class="col col-lg-8  px-2 ">
 			<div class="card mt-3">
 				<div class="card-header py-1"> 
-					{% if editMode %}
+					{# {% if editMode %}
 						<h4> Mise à jour  d'une figure</h4>
-					{% else %}
+					{% else %} #}
 						<h4 >Création d'une figure</h4>
-					{% endif %}
+					{# {% endif %} #}
 					
 				</div>
 				<div class="card-body">
@@ -24,41 +24,34 @@
 						{{ form_row(formTrick.title, {'attr': {'placeholder': "Titre de la Figure"}}) }}
 						{{ form_row(formTrick.content, {'attr': {'placeholder': "Contenu de la Figure"}}) }}
 						{{ form_row(formTrick.defaultimage) }}
-						{{ form_row(formTrick.images) }}
+						{# {{ form_row(formTrick.images) }} #}
 
 						{# Si la route est "annonces_edit on affiche les images #}
-						{% if editMode %}
-							<h2>Images</h2> 
-							<div>
-								<ul class="list-inline">
-								{% for image in trick.images %}
-								
-										<li class="list-inline-item">
-
-											<img src="{{ asset('/uploads/images/'~image.name) }}" alt="" width="150">
-												<div class="card-actions trick-media-actions py-2 px-3 mt-2 ml-auto mr-2">
-													<a href="{{ path('trick_delete_image', {'id': image.id})}}" class="btn btn-outline-danger btn-sm mx-1" 
-														data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
-														<i class="fas fa-trash-alt"></i>
-													</a> 
-													{# <form method="post" action="{{ path('trick_delete_image', {'id': image.id}) }}" onsubmit="return confirm('Êtes vous sûr(e) de vouloir supprimer cette image ?');">
-														<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ image.id) }}">
-													<button class="btn">Supprimer</button>
-												</form>#}
-												</div>
-											{# On ajoute un lien permettant de supprimer une image (sera géré en Ajax) 
-											<a href="{{ path('app_annonces_delete_image', {'id': image.id})}}" 
-											data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">Supprimer</a>#}
-											</li>
-
-								
-								{% endfor %}
-								</ul>
-							</div>
-						{% endif %}
+						
 							
 						<div class="col col-lg-6 pt-2 pb-5 d-flex flex-column">
-							   
+							<div class="col pt-1 pb-1 d-flex flex-column" id="newTrickImages">
+								<ul id="image-fields-list"
+									data-prototype="{{ form_widget(formTrick.images.vars.prototype)|e }}"
+									data-widget-tags="{{ '<li></li>'|e }}"
+									data-widget-counter="{{ formTrick.images|length }}">
+									{% for imageField in formTrick.images %}
+										<li>
+											{{ form_errors(imageField) }}
+											{{ form_widget(imageField) }}
+										</li>
+									{% endfor %}
+								</ul>
+								
+								{# <input type="hidden" id="image-counter">
+								<button type="button" id="add-image" class="add-another-collection-widget btn btn-info" 
+								data-list-selector="#image-fields-list">Add an image</button>#} 
+								<input type="hidden" id="image-counter">
+								<button type="button" id="add-image" 
+									class="add-another-collection-widget"
+									data-list-selector="#image-fields-list">Ajouter une Image
+								</button>   
+							</div>
 							{# <div id = "videos" data-prototype = "{{ form_row(form.videos.vars.prototype)|e('html_attr')}}">
 								{{ form_row(form.videos) }}
 								<span></span>
@@ -79,41 +72,25 @@
 										{{ form_widget(videoField) }}
 									</li>
 								{% endfor %} #}
-							{% if editMode %}
-								{% for video in trick.videos %}
-									<div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}">
-										<iframe class="showtrick-media" id="{{ loop.index + trick.videos|length }}" src="{{ video.videourl }}" width="190" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-										{# <iframe src="{{ video.url }}" allowfullscreen></iframe> #}
-									</div>
-									<div class="card-actions trick-media-actions py-2 px-3 mt-2 ml-auto mr-2">
-										<a href="{{ path('trick_delete_video', {'id': video.id})}}" class="btn btn-outline-danger btn-sm mx-1" 
-											data-delete data-token="{{ csrf_token('delete' ~ video.id )}}">
-											<i class="fas fa-trash-alt"></i>
-										</a> 
-										{# <form method="post" action="{{ path('trick_delete_image', {'id': image.id}) }}" onsubmit="return confirm('Êtes vous sûr(e) de vouloir supprimer cette image ?');">
-											<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ image.id) }}">
-										<button class="btn">Supprimer</button>
-									</form>#}
-									</div>
-								{% endfor %}
-							{% endif %}
-
-							<ul id="video-fields-list"
-								data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e }}"
-								data-widget-tags="{{ '<li></li>'|e }}"
-								data-widget-counter="{{ formTrick.videos|length }}">
-								{% for videoField in formTrick.videos %}
-									<li>
-										{{ form_errors(videoField) }}
-										{{ form_widget(videoField) }}
-									</li>
-								{% endfor %}
-							</ul>
-
-							<button type="button"
-								class="add-another-collection-widget"
-								data-list-selector="#video-fields-list">Ajouter une Video
-							</button>
+							
+							<div class="col pt-1 pb-1 d-flex flex-column" id="newTrickVideos">
+								<ul id="video-fields-list"
+									data-prototype="{{ form_widget(formTrick.videos.vars.prototype)|e }}"
+									data-widget-tags="{{ '<li></li>'|e }}"
+									data-widget-counter="{{ formTrick.videos|length }}">
+									{% for videoField in formTrick.videos %}
+										<li>
+											{{ form_errors(videoField) }}
+											{{ form_widget(videoField) }}
+										</li>
+									{% endfor %}
+								</ul>
+								<input type="hidden" id="video-counter">
+								<button type="button"
+									class="add-another-collection-widget"
+									data-list-selector="#video-fields-list">Ajouter une Video
+								</button>
+							</div>
 							{# </ul> #}
 							{# <input type="hidden" id="video-counter"> #}
 							{# store the prototype on the data-prototype attribute #}
@@ -127,7 +104,7 @@
    
     <script>
 
-// add-collection-widget.js
+/* // add-collection-widget.js
 jQuery(document).ready(function () {
     jQuery('.add-another-collection-widget').click(function (e) {
         var list = jQuery(jQuery(this).attr('data-list-selector'));
@@ -149,7 +126,7 @@ jQuery(document).ready(function () {
         var newElem = jQuery(list.attr('data-widget-tags')).html(newWidget);
         newElem.appendTo(list);
     });
-});
+}); */
 
        /*  const addFormToCollection = (e) => {
         const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
@@ -180,11 +157,11 @@ jQuery(document).ready(function () {
 {% endblock %}
 						<button type="submit" class="btn btn-primary">
 
-							{% if editMode %}
+							{# {% if editMode %}
 								Mettre à Jour
-							{% else %}
+							{% else %} #}
 								Créer la Figure
-							{% endif %}
+							{# {% endif %} #}
 
 						</button>
 					{# </div> #}
