@@ -108,20 +108,20 @@ footer {
 *************************/
 
 .fa-arrow-down {
-  color: #2c3e50;
+  color: #0469f6;
   font-size: 2rem;
   position: absolute;
   right: 2rem;
-  bottom: 2rem;
+  top: 40rem;
   animation: arrow-nav 1000ms forwards infinite alternate;
 }
 
 .fa-arrow-up {
-  color: #2c3e50;
+  color: #0469f6;
   font-size: 2rem;
   position: absolute;
   right: 1rem;
-  bottom: 0rem;
+  bottom: 8rem;
   animation: arrow-nav 1000ms forwards infinite alternate;
 }
 
@@ -224,15 +224,15 @@ footer {
 
 #tricks .card-img {
   border-radius: 2% 2% 0% 0%;
-  height: 10rem;
+  height: 15rem;
   object-fit: cover;
 }
 
 .card-img-overlay {
   position: absolute;
-  top: 35%;
+  top: auto;
   right: 0;
-  bottom: 0;
+  bottom: 75%;
   left: 0%;
   padding: 1rem;
   border-radius: calc(0.25rem - 1px);
@@ -499,7 +499,7 @@ ol {
 }
 
 #trickPage hr {
-  border-top: rgba(137, 172, 170, 0.2) 1px solid;
+  border-top: #2c3e50 1px solid;
   margin-right: 9rem;
   margin-left: 9rem;
 }
@@ -790,42 +790,6 @@ ol {
     font-size: 2rem;
   }
   
-
-  /*************************
-  **** edit Trick Page ******
-  **************************/
-  
-  .mainImg-input .custom-file {
-    display: none;
-  }
-  
-  .edit-media-input .custom-file,
-  .edit-media-input button {
-    display: none;
-  }
-  
-  .edit-media-input .custom-file {
-    margin-top: 1rem;
-  }
-  
-  .card-actions button {
-    border: none;
-    background: none;
-  }
-  
-  #editPage #trickMedia .btn {
-    display: none;
-  }
-  
-  @media (max-width: 576px) {
-    #editPage #trickMedia .btn {
-      display: block;
-    }
-    
-    #editPage .media-slider {
-      display: none;
-    }
-  }
 
 /*************************
 ****** Login Page ********
