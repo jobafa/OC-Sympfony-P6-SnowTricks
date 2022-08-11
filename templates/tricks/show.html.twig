@@ -7,9 +7,10 @@
 	{# <trick> #}
 <div class="container-fluid py-3">
 	<div class="container-lg px-0" id="trickPage">
-		<div class="row justify-content-center mt-5 ">
+		<div class="row d-flex flex-column justify-content-center align-items-center ">
 			<div class="col-md-11  mt-5 mb-4"> 
 				<div class="card my-3">
+				{# <div class="row d-flex flex-column justify-content-center align-items-center" > #}
 					<div class="py-5 px-3 mr-auto return-btn">
 						<a href="{{ path('app_tricks') }}#tricks" class="btn btn-primary">
 							<i class="fas fa-step-backward mr-2"></i>  Liste des Figures
@@ -34,45 +35,55 @@
 					<div class="card-img-overlay">
 						<div class="card-show-title ">{{ trick.title }}</div>
 					</div>
-					<div class="card-body">
-						{# <div class="row text-center" id="trickMedia">
+				{# </div>
+				<div class="row d-flex flex-column justify-content-center align-items-center" > #}
+					<div class="card-body justify-content-center">
+						<div class="row d-lg-flex  justify-content-center text-center" id="trickMedia">
 							<a href="#" id="loadMedia" class="d-md-block d-lg-none">
-								<button class="btn btn-outline-secondary">Voir les médias</button>
+								<button class="btn btn-outline-secondary">Afficher les médias</button>
 							</a>
-							<a href="#" id="hideMedia" class="d-none d-md-none d-lg-none">
+						{# 	<a href="#" id="hideMedia" class="d-none d-md-none d-lg-none">
 								<button class="btn btn-outline-secondary mt-3">Masquer les médias</button>
 							</a> #}
 								{# <button class="btn btn-outline-secondary">Afficher les médias</button>
 							<a href="#" id="hideMedia" class="d-none d-md-none d-lg-none">
 								<button class="btn btn-outline-secondary mt-3">Masquer les médias</button>
 							</a> #}
+						{# <div class="row d-lg-flex load-media"> #}
 						{% if (trick.images) or (trick.videos) %}
-							<div class="row d-none d-lg-flex ">
+							{# <div class="row d-lg-flex" > #}
 								<div class="col-lg-6 col-md-12 ">
 											<h6>Photos</h6>
+											<ul class="media-slider">
 											{% for image in trick.images %}
+											<li class="d-inline  mb-3 mx-2">
 													<img class=" img-thumbnail showtrick-media " src="{{ asset('/uploads/images/'~image.name) }}"  alt="{{ trick.title }}" width="190">
+											</li>
 											{% endfor %}
+											</ul>
 								</div>                                          
 								<div class="col-lg-6 col-md-12">
 											<h6>Videos</h6>
+											<ul class="media-slider">
 											{% for video in trick.videos %}
-												<div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}">
+												{# <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}"> #}
+												<li class="d-inline mb-3 mx-2">
 													<iframe class="showtrick-media" id="{{ loop.index + trick.videos|length }}" src="{{ video.videourl }}" width="190" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-												</div>
+												</li>
 											{% endfor %}
+											</ul>
 								</div>                                                   
-							</div> 
-							<div class="text-center">
-                                <a href="#" id="loadMedia" class="d-md-block d-lg-none">
+							{# </div> #} 
+							{#<div class="text-center">
+                                <a href="#" id="showMedia" class="d-md-block d-lg-none " >
                                     <button class="btn btn-outline-secondary">Voir les médias</button>
                                 </a>
-                               {#  <a href="#" id="hideMedia" class="d-none d-md-none d-lg-none">
+                                 <a href="#" id="hideMedia" class="d-none d-md-none d-lg-none">
                                     <button class="btn btn-outline-secondary mt-3">Masquer les médias</button>
-                                </a> #}
-                            </div>                        
+                                </a> 
+                            </div>   #}                     
 						{% endif %}
-						{# </div> #}
+						 </div> {##}
 						<!-- End Carousel -->
 						<hr>
 						<h5 class="card-title">Description</h5>
@@ -92,12 +103,13 @@
 							</ul>    
 						</div>                               
 					</div>
+				{# </div> #}
 				</div>
 			</div>	
 			<section id="commentaires ">
 				<div class="row justify-content-center">
 					<div class="col col-lg-10 justify-content-center">
-						<div class="card-show" >
+						<div class="card" >
 							<div class="card-body">
 								{{ form_start(commentForm) }}
 								{% if app.user %}
@@ -106,14 +118,14 @@
 									{{ form_row(commentForm.content, {'attr': {'placeholder': "Votre commentaire"}}) }}
 
 									<button type="submit" class="btn btn-primary">
-										Commentez
+										Commenter
 									</button>
 
 
 								{% else %}
 									<div class=" justify-content-center text-center alert-info text-white my-1  px-5">
 										<p>
-											<h6>Vous devez vous connecter pour poster des commentaires ! <a class=" text-white mx-2" href="{{ path('security_login') }}#login">Connectez Vous</a></h6>
+											<h6>Vous devez vous connecter pour poster des commentaires ! <a class=" text-white mx-2" href="{{ path('security_login') }}#login">Connexion</a></h6>
 										</p>
 									</div>
 									{{ form_row(commentForm.author, {'attr': {'label': 'Auteur', 'disabled': 'disabled'}}) }}
@@ -123,7 +135,7 @@
 										<p>
 											<small>
 												<a class="text-white mx-2 " href="{{ path('user_forgotpassword_request') }}">J'ai oubli&eacute; mon Mot de Passe</a>Vous n'avez pas encore de compte
-												<a class=" text-white mx-2" href="{{ path('user_registration') }}">Inscrivez Vous</a>
+												<a class=" text-white mx-2" href="{{ path('user_registration') }}">Inscription</a>
 											</small>
 										</p>
 									</div>
@@ -133,11 +145,11 @@
 						</div>
 					</div>
 				</div>
-				<div class="row   justify-content-center">
+				<div class="row   justify-content-center" id="comments">
 					<div class="col col-lg-10">	
-						<h5 class="py-3">{{ trick.comments | length }}
+						<h5 class="py-3">{{ totalComments }}
 								commentaires</h5>
-						{% for comment in trick.comments %}
+						{% for comment in comments %}
 							<div class="card-show py-3 mb-3" >
 								<div class="card-body">
 									<div class="comment">
@@ -161,6 +173,44 @@
 								</div>
 							</div>
 						{% endfor %}
+						{% if totalComments > 4 %}
+						<nav aria-label="...">
+						<ul class="pagination justify-content-center">
+							{# <li class="page-item {{ (page == 1) ? 'disabled' : '' }}">
+								<a class="page-link"  href = "?page=1#tricks">
+									
+									<i class="fas fa-step-backward"></i> 
+								</a>
+							</li> #}
+							<li class="page-item {{ (page == 1) ? 'disabled' : '' }}">
+								<a class="page-link"  href = "{{ (page > 1) ? '?page=' ~ (page - 1) : ''}}#comments">
+								Précédant
+									{# <i class="fas fa-angle-left"></i> #}
+								</a>
+							</li>
+							{% set pages =  (totalComments/limit)|round(0,'ceil') %}
+							{% for item in 1..pages %} 
+								<li class="page-item {{ (page == item) ? 'disabled' : '' }}">
+									<a class="page-link"  href = "?page={{ item }}#comments">
+										{{ item }}
+									</a>
+								</li>
+							{% endfor %}
+							<li class="page-item {{ (page == pages) ? 'disabled' : '' }}">
+								<a class="page-link"  href = "{{ (page < pages) ? '?page=' ~ (page + 1) : ''}}#comments">
+								Suivant
+									{# <i class="fas fa-angle-right"></i> #}
+								</a>
+							</li>
+							{# <li class="page-item {{ (page == pages) ? 'disabled' : '' }}">
+								<a class="page-link"  href = "?page={{ pages }}#tricks">
+									<i class="fas fa-step-forward"></i> 
+								</a>
+							</li> #}
+							
+						</ul>
+						</nav>
+						{% endif %}
 					</div>
 				</div>
 			</section>	
@@ -169,5 +219,19 @@
 	</div>
 </div>
 {% include "tricks/_modal_deletion.html.twig" %}
+{# {% block javascripts %}
+<script>
+    //const mediaDiv = document.getElementById("show-media");
+    //const btn = document.getElementById("showMedia");
+    document.getElementById("showMedia").onclick = function () {
+      if (document.getElementById("show-media").style.display !== "none") {
+        document.getElementById("show-media").style.display = "none";
+      } else {
+        document.getElementById("show-media").style.display = "block";
+      }
+    };
+  </script>
+  
+{% endblock %} #}
 {% endblock %}
 
