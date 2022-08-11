@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ImageRepository;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
@@ -17,11 +18,12 @@ class Image
      */
     private $id;
 
+    private $file;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $name;
-
     
 
     /**
@@ -38,6 +40,18 @@ class Image
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile(UploadedFile $file)
+    {
+        $this->file = $file;
+
+        return $this;
     }
 
     public function getName(): ?string
