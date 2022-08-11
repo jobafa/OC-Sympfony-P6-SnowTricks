@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Trick;
+use App\Form\ImageType;
 use App\Form\VideoType;
 use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
@@ -33,25 +34,35 @@ class TrickType extends AbstractType
             ->add('defaultimage', FileType::class, [
                 'label' => 'Image Principale',
                 'attr' => [
-                    'placeholder' => "Charger l'image de Principale",
+                    'placeholder' => "Charger l'image  Principale",
                 ] ,
                 'required' => false,
                 'data_class' => null,
             ])
-            // AJOUT CHAMP "images" non lié à la db ( mapped à false)
+            /* // AJOUT CHAMP "images" non lié à la db ( mapped à false)
             ->add('images', FileType::class, [
                 'label' => "Plus d'mages ",
                 'multiple' => true,
                 'mapped' => false,
                 'required' => false,
                 'data_class' => null,
-            ])
+            ]) */
+            // AJOUT CHAMPS "images"
+            ->add('images', CollectionType::class, [
+                'entry_type' => ImageType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'by_reference' => false,
+        ])
             // AJOUT CHAMPS "videos"
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,
                 'allow_delete' => true,
+                'delete_empty' => true,
                 'by_reference' => false,
         ]);
             // ->add('image')

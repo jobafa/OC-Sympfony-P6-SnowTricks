@@ -2,10 +2,11 @@
 
 namespace App\Service;
 
-use App\Entity\Video;
 use App\Entity\Trick;
-//use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Video;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 class VideoService
@@ -13,16 +14,16 @@ class VideoService
     /**
      * @var EntityManagerInterface
      */
-    //private $entityManager;
+    private $entityManager;
 
   
-    /* public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        //$this->entityManager = $entityManager;
-    } */
+        $this->entityManager = $entityManager;
+    } 
 
 
-/**
+    /**
      *  trick's videos adding.
      * @return void
      */
@@ -39,4 +40,76 @@ class VideoService
 
       
     }
+
+    /**
+     *  save trick's existing videos .
+     * @return array $originalVideos
+     */
+     public function savedVideos(Trick $trick)
+    {
+        $originalVideos = new ArrayCollection();
+
+        // Create an ArrayCollection of the current video objects in the database
+        foreach ($trick->getVideos() as $video) {
+            $originalVideos->add($video);
+        }
+        return $originalVideos;
+    }
+
+    /**
+     *  delete saved trick's existing videos .
+     * @return void
+     */
+    public function checkSavedVideos(Trick $trick,  $originalVideos)
+    {
+        // remove the relationship between the tag and the Task
+        foreach ($originalVideos as $originalVideo) {
+            if (false === $trick->getVideos()->contains($originalVideo)) {
+                // remove the Task from the Tag
+            // $originalVideo->getId()->removeElement($trick);
+
+                // if it was a many-to-one relationship, remove the relationship like this
+                $originalVideo->setTrick(null);
+
+                $this->entityManager->persist($originalVideo);
+
+                // if you wanted to delete the Tag entirely, you can also do that
+                // $entityManager->remove($tag);
+            }
+        }
+    }
+
+    /**
+     *  trick's videos deleting.
+     * @return void
+     */
+   /*  public function deleteVideos(Trick $trick, FormInterface $form, $originalVideos)
+    {
+        $videos = $form->get('videos')->getData();
+            foreach ( $videos as $video ) {
+
+                // remove the relationship between the tag and the Task
+                foreach ($originalVideos as $originalVideo) {
+                    if (false === $trick->getVideos()->contains($originalVideo)) {
+                        // remove the Task from the Tag
+                        $originalVideo->getVideos()->removeElement($trick);
+
+                        // if it was a many-to-one relationship, remove the relationship like this
+                        // $tag->setTask(null);
+
+                        $this->entityManager->persist($originalVideo);
+
+                        // if you wanted to delete the Tag entirely, you can also do that
+                        // $entityManager->remove($tag);
+                    }
+                }
+                
+                // INSERTION DB VIDEOS ENTITY
+                $videoUrl = $video->getVideourl();
+                $video->setVideourl($videoUrl);
+                $trick->addVideo($video);
+            }
+
+            
+    } */
 }
