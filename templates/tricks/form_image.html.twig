@@ -1,0 +1,5 @@
+<div class="del-image-{{form.vars.name}}">
+    {{ form_row(form.file, {'label': 'Image :', 'attr': {
+                                                             'style' : 'width: 350px'}}) }}
+    <button type="button" class="btn btn-remove fa fa-trash fa-lg" style='font-size:22px; color:red' data-rel="del-image-{{ form.vars.name }}"></button>
+</div>
