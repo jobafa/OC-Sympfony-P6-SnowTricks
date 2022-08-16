@@ -16,19 +16,14 @@ class Uploader
     {
         $this->params = $params;
     }
-    /* private $uploadsPath;
-
-    public function __construct(string $uploadsPath)
-    {
-        $this->uploadsPath = $uploadsPath;
-    } */
-
+    
     /**
      * Uploading image file .
      */
+    //public function uploadFile(File $file): string
     public function uploadFile(File $file): string
     {
-        //$destination = $this->uploadsPath.$type.'/'.$folderName;
+        
         $fileName = md5(uniqid()).'.'.$file->guessExtension();
         $file->move($this->params->get('images_directory'), $fileName);
 

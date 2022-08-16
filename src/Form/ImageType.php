@@ -21,15 +21,14 @@ class ImageType extends AbstractType
                 'placeholder' => "Charger l'image",
             ],
         ])
-        ->add('delete', ButtonType::class, [
+          ->add('delete', ButtonType::class, [
             'label_html' => true,
-            'label' => "<i class='far fa-square fa-stack-2x'></i>
-            <i class='fas fa-times-circle fa-stack-2x'></i>",
+            'label' => "<i class='fas fa-times-circle fa-stack-2x'></i>",
             'attr' => [
                 'data-action' => 'delete',
                 'data-target' => '#trick_images___name__',
             ],
-        ]);
+        ]) /**/;
             // ->add('name')
             // ->add('videourl')
             // ->add('trick')

@@ -27,6 +27,7 @@ class TrickType extends AbstractType
             ])
             ->add('title', TextType::class, [
                 'label' => 'Nom Figure',
+                //'data_class' => null,
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Description',
@@ -50,16 +51,23 @@ class TrickType extends AbstractType
             // AJOUT CHAMPS "images"
             ->add('images', CollectionType::class, [
                 'entry_type' => ImageType::class,
-                'entry_options' => ['label' => false],
+                //'prototype' => true,
+                //'entry_options' => ['label' => false],
+                //'label' => false,
+                //'label' => "Plus d'Images ",
                 'allow_add' => true,
                 'allow_delete' => true,
                 'delete_empty' => true,
                 'by_reference' => false,
+              /*  'mapped' => false,
+                'data_class' => null,
+                 */          
         ])
             // AJOUT CHAMPS "videos"
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,
-                'entry_options' => ['label' => false],
+                //'entry_options' => ['label' => false],
+                'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'delete_empty' => true,

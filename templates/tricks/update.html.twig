@@ -2,9 +2,11 @@
 
 {% form_theme formUpdateTrick 'bootstrap_5_layout.html.twig' %}
 
+{# {% form_theme formUpdateTrick _self %} #}
+
 {% block body %}
 	<div class="container-fluid mt-5">
-		<div class="row justify-content-center py-5" id="ajoutfigure">
+		<div class="row justify-content-center py-5" id="updatetrick">
 			<div class="col col-lg-8  px-2 ">
 				<div class="card mt-3">
 					<div class="card-header py-1">
@@ -16,9 +18,11 @@
 					<div class="card-body">
 
 						{{ form_start(formUpdateTrick) }}
+						{{ form_widget(formUpdateTrick._token) }}
+                        {{ form_errors(formUpdateTrick) }}
 						{% if app.user.id == trick.user.id %}
 							{{ form_row(formUpdateTrick.category, {'attr': {'placeholder': "Titre de la Figure"}}) }}
-							{{ form_row(formUpdateTrick.title, {'attr': {'placeholder': "Titre de la Figure"}}) }}
+							{{ form_row(formUpdateTrick.title) }}
 							{{ form_row(formUpdateTrick.content, {'attr': {'placeholder': "Contenu de la Figure"}}) }}
 						{% endif %}
 
@@ -26,172 +30,79 @@
 						{% if trick.defaultimage != "" %}
 							<img src="{{ asset('/uploads/images/'~trick.defaultimage) }}" alt="" width="250">
 							{% if app.user.id == trick.user.id %}
-								{#<a href="{{ path('trick_defaultImage_delete', {'id': trick.id})}}" class="btn btn-outline-danger btn-sm mx-1" 
-																																	data-delete data-token="{{ csrf_token('delete' ~ trick.id )}}">
-																																	<i class="fas fa-trash-alt"></i>
-																																</a>#}
-								<a class="ml-2" data-toggle="modal" data-target="#deletedefaultimageModal" data-action="{{ path('trick_defaultImage_delete', {'id': trick.id})}}" data-token="{{ csrf_token('delete_' ~ trick.id) }}">
-									<i class="fas fa-trash-alt   px-2" style='font-size:20px; color:red'></i>
-
-								</a>
 							{% endif %}
 						{% endif %}
 						{# {{ form_row(formUpdateTrick.images) }} #}
 						
-						<div>
+						<div class="col-6 col-lg-10 media-slider pt-2 pb-5 d-flex flex-column">
 							<h2>Images</h2>
-							<ul class="list-inline">
-								{% for image in trick.images %}
-
-									<li class="list-inline-item">
-
-										<img src="{{ asset('/uploads/images/'~image.name) }}" alt="" width="150">
-										{% if app.user.id == trick.user.id %}
-											<div class="card-actions trick-media-actions py-2 px-3 mt-2 ml-auto mr-2">
-												<button class="delete-media-button ml-3" type="button">
-													<i class="fas fa-trash-alt" style='font-size:20px; color:red'></i>
-												</button>
-											</div<
-											{# <div class="card-actions trick-media-actions py-2 px-3 mt-2 ml-auto mr-2">
-												<a href="{{ path('trick_delete_image', {'id': image.id})}}" class="btn btn-outline-danger btn-sm mx-1" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
-													<i class="fas fa-trash-alt"></i>
-												</a>
-											</div> #}
-										{% endif %}
-									</li>
-
-
-								{% endfor %}
-							</ul>
-							<div class="col pt-1 pb-1 d-flex flex-column" id="newTrickImages">
-								<ul id="image-fields-list"
-									data-prototype="{{ form_widget(formUpdateTrick.images.vars.prototype)|e }}"
-									data-widget-tags="{{ '<li></li>'|e }}"
-									data-widget-counter="{{ formUpdateTrick.images|length }}">
-									{% for imageField in formUpdateTrick.images %}
-										<li>
-											{{ form_errors(imageField) }}
-											{{ form_widget(imageField) }}
-										</li>
-									{% endfor %}
-								</ul>
-								
-								{# <input type="hidden" id="image-counter">
-								<button type="button" id="add-image" class="add-another-collection-widget btn btn-info" 
-								data-list-selector="#image-fields-list">Add an image</button>#} 
-								<input type="hidden" id="image-counter">
-								<button type="button" id="add-image" 
-									class="add-another-collection-widget"
-									data-list-selector="#image-fields-list">Ajouter une Image
-								</button>   
-							</div>
+                            {# <div class="image-band"> #}
+                                <div id="images" data-index="{{ formUpdateTrick.images|length > 0 ? formUpdateTrick.images|last.vars.name+1 : 0 }}" data-prototype="{{ include("tricks/form_image.html.twig", { form: formUpdateTrick.images.vars.prototype })|e("html_attr") }}">
+                                    {% if formUpdateTrick.images | length > 0 %}
+                                        {% for image in formUpdateTrick.images %}
+                                        {% set i = loop.index -1 %}
+                                        <a class="del-image-{{image.vars.name}}" >
+                                            <img data-target='#carousel-custom' data-slide-to="{{ i }}" src='{{ asset("uploads/images/")~image.vars.value.name}}' width='180'alt='' />
+                                            {{ include("tricks/form_image.html.twig", { form: image }) }} 
+                                            </a>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <div class="add-image">
+                                        
+                                        <button type="button" class="bg-primary text-white btn-add fa fa-plus fa-md py-2 px-1" 
+                                        data-rel="#images"> Ajouter une image</button>
+                                        {# <button type="button" class="add-another-collection-widget" 
+                                                    data-list-selector="#video-fields-list">Ajouter une Video
+                                                    </button> #}
+                                    </div>
+                            </div>
+							{# <div class="col pt-1 pb-1 d-flex flex-column" id="newTrickImages">
+							</div> #}
 						</div>
-						<div class="col col-lg-6 pt-2 pb-5 d-flex flex-column">
-							{# {{dump(trick.videos)}} #}
-							{# {% for video in trick.videos %}
-									<div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}">
-										<iframe class="showtrick-media" id="{{ loop.index + trick.videos|length }}" src="{{ video.videourl }}" width="190" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-										
+						<div class="col-6 col-lg-10 pt-2 pb-5 d-flex flex-column">
+						    <h2>Vidéos</h2>
+							{% for video in formUpdateTrick.videos %}
+								<div class="col-10 col-sm-3 media-slider mb-3 mx-2 px-0">
+									<iframe class="trick-media" src="{{ video.vars.value.videourl }}" width="250" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+									<div class="edit-media-input">
+										{{ form_errors(video) }}
+										{{ form_widget(video) }}
 									</div>
-									{% if app.user.id == trick.user.id %}
 									<div class="card-actions trick-media-actions py-2 px-3 mt-2 ml-auto mr-2">
-										<a href="{{ path('trick_delete_video', {'id': video.id})}}" class="btn btn-outline-danger btn-sm mx-1" 
-											data-delete data-token="{{ csrf_token('delete' ~ video.id )}}">
-											<i class="fas fa-trash-alt"></i>
-										</a>
+										<button class="delete-media-button ml-3" type="button">
+											<i class="fas fa-trash-alt" style='font-size:20px; color:red'></i>
+										</button>
 									</div>
-									{% endif %}
-								{% endfor %}#}
-								{% for video in formUpdateTrick.videos %}
-									<div class="col-10 col-sm-3 media-slider mb-3 mx-2 px-0">
-										<iframe class="trick-media" src="{{ video.vars.value.videourl }}" width="250" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-										<div class="edit-media-input">
-											{{ form_errors(video) }}
-											{{ form_widget(video) }}
-										</div>
-										<div class="card-actions trick-media-actions py-2 px-3 mt-2 ml-auto mr-2">
-											{# <button class="edit-media-button" type="button">
-												<i class="fas fa-pencil-alt"></i>
-											</button> #}
-											<button class="delete-media-button ml-3" type="button">
-												<i class="fas fa-trash-alt" style='font-size:20px; color:red'></i>
-											</button>
-										</div>
-									</div>
-								{% endfor %}
-								<ul id="video-fields-list" data-prototype="{{ form_widget(formUpdateTrick.videos.vars.prototype)|e }}" 
-									data-widget-tags="{{ '<li></li>'|e }}" 
-									data-widget-counter="{{ formUpdateTrick.videos|length }}"> 
-									{# {% for videoField in formUpdateTrick.videos %}
-										<li>
-											{{ form_errors(videoField) }}
-											{{ form_widget(videoField) }}
-											<button class="delete-media-button ml-3" type="button">
-												<i class="fas fa-trash-alt"></i>
-											</button>
-										</li>
-										
-									{% endfor %} #}
-								</ul> {# #}
+								</div>
+							{% endfor %}
+							<ul id="video-fields-list" data-prototype="{{ form_widget(formUpdateTrick.videos.vars.prototype)|e }}" 
+								data-widget-tags="{{ '<li></li>'|e }}" 
+								data-widget-counter="{{ formUpdateTrick.videos|length }}"> 
+							</ul>
 
-								<button type="button" class="add-another-collection-widget" 
-								data-list-selector="#video-fields-list">Ajouter une Video
-								</button>
+							{# <button type="button" class="add-another-collection-widget" 
+							data-list-selector="#video-fields-list">Ajouter une Video
+							</button> #}
+                            <button type="button" class="add-another-collection-widget bg-primary text-white fa fa-plus fa-md py-2 px-1" 
+                            data-list-selector="#video-fields-list"> Ajouter une Video</button>
 						</div>
-						<button type="submit" class="btn btn-primary">
-							Mettre à Jour
-						</button>
-						{# </div> #}
-						{{ form_end(formUpdateTrick) }}
+						<div class="col pt-2 pb-5 d-flex flex-column justify-content-center">
+                            <button type="submit" class="btn btn-success">
+                                Mettre à Jour
+                            </button>
+						</div>
+						{{ form_end(formUpdateTrick, {render_rest: false}) }}
+						{# {{ form_end(formUpdateTrick) }} #}
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	{# {% include "tricks/_modal_image_deletion.html.twig" %} #}
-
-	{% block javascripts %}
-		<script>
-			window.onload = () => { // Gestion des boutons "Supprimer"
-			let liens = document.querySelectorAll("[data-delete]")
-
-			// On boucle sur liens
-			for (lien of liens) { // On écoute le clic
-			lien.addEventListener("click", function (e) { // On empêche la navigation
-			e.preventDefault()
-
-			// On demande confirmation
-			if (confirm("Voulez-vous supprimer cette image ?")) { // On envoie une requête Ajax vers le href du lien avec la méthode DELETE
-			fetch(this.getAttribute("href"), {
-			method: "DELETE",
-			headers: {
-			"X-Requested-With": "XMLHttpRequest",
-			"Content-Type": "application/json"
-			},
-			body: JSON.stringify(
-			{"_token": this.dataset.token}
-			)
-			}).then(
-			// On récupère la réponse en JSON
-			response => response.json()
-			// response => { console.log(response) }
-			).then(data => {
-			if (data.success) 
-			this.parentElement.remove()
-			else 
-			alert(data.error)
-
-
-
-
-
-			}).catch(e => alert(e))
-			}
-			})
-			}
-			}
-		</script>
-	{% endblock %}
 	{% include "tricks/_modal_defaultimage_deletion.html.twig" %}
-	{##}
+	
+{% block javascripts %}
+<script src="{{ asset("js/jsForm.js") }}"></script>
+
+{% endblock %}
+	
 {% endblock %}

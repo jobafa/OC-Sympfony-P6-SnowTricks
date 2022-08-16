@@ -100,14 +100,11 @@ class TricksController extends AbstractController
             // redirect to login form
             return $this->redirectToRoute('security_login', ['_fragment' => 'login']);
         }
-        if(!$trick){
+        //if(!$trick){
             $trick = new Trick();
             $dbDefaultimage = "";
-        }
-        /* else{
-            //SAVE YHE NAME OF DEFAULT IMAGE 
-            $dbDefaultimage = $trick->getDefaultimage();
-        } */
+        //}
+        
         
         $form = $this->createForm(TrickType::class, $trick);
                
@@ -156,7 +153,7 @@ class TricksController extends AbstractController
     */
 
     public function updateTrick(Trick $trick = null,  Request $request, EntityManagerInterface  $manager): Response
-    {  
+    {  //dd($request);
         if(!$this->getUser()){
             $this->addFlash('danger', 'Vous devez vous connecter pour effectuer cette tache !');
 
@@ -164,58 +161,40 @@ class TricksController extends AbstractController
             return $this->redirectToRoute('security_login', ['_fragment' => 'login']);
         }
 
-        // Saved trick videos collection
+        // DB Saved trick videos collection
         $originalVideos = $this->videoService->savedVideos($trick);
-
-        // Saved trick images collection
+        // DB Saved trick images collection
         $originalImages = $this->imageService->savedImages($trick);
-        /* $originalVideos = new ArrayCollection();
-
-        // Create an ArrayCollection of the current video objects in the database
-        foreach ($trick->getVideos() as $video) {
-            $originalVideos->add($video);
-        } */
-
+        
         if(!$trick){
             $trick = new Trick();
             $dbDefaultimage = "";
         }else{
-            //SAVE YHE NAME OF DEFAULT IMAGE 
+            //SAVE THE NAME OF DEFAULT IMAGE 
             $dbDefaultimage = $trick->getDefaultimage();
+            //$dbTitle = $trick->getTitle();
+            //dd($dbTitle);
         }
-
+        
         if($this->getUser() == $trick->getUser()){
             $form = $this->createForm(TrickType::class, $trick);
-        }else{
+         }else{
             $form = $this->createForm(OthersTrickType::class, $trick);
-        }
+        } 
 
         $form->handleRequest($request);
-        
+        //dd($dbTitle);
         if($form->isSubmitted() && $form->isValid()){
-
+            //$trick->setTitle($dbTitle);
             //Remove videos from $originalVideos
             $this->videoService->checkSavedVideos($trick, $originalVideos);
 
             //Remove images from $originalImages
-            $this->imageService->checkSavedImages($trick, $originalImages);
+             //dd($form->getData());
+            $this->imageService->checkSavedImages($form->getData(), $originalImages);//ADDED FOR IMAGES DELETION TESTS 
+            //$this->imageService->checkSavedImages($trick, $originalImages);
 
-            /* // remove the relationship between the tag and the Task
-            foreach ($originalVideos as $originalVideo) {
-                if (false === $trick->getVideos()->contains($originalVideo)) {
-                    // remove the Task from the Tag
-                   // $originalVideo->getId()->removeElement($trick);
-
-                    // if it was a many-to-one relationship, remove the relationship like this
-                     $originalVideo->setTrick(null);
-
-                    $manager->persist($originalVideo);
-
-                    // if you wanted to delete the Tag entirely, you can also do that
-                    // $entityManager->remove($tag);
-                }
-            } */
-         
+        
             $this->imageService->manageImages($trick, $form, $dbDefaultimage);
             $this->videoService->manageVideos($trick, $form);
 
@@ -224,7 +203,8 @@ class TricksController extends AbstractController
                 
             } */
             $trick->setUpdatedAt(new \DateTime());
-
+            //dd($dbTitle);
+            //$trick->setTitle($dbTitle);
             // $trick->setUser($this->getUser());
             
             // $manager->persist($trick);

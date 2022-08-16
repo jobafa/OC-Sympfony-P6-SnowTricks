@@ -5,7 +5,9 @@ namespace App\Service;
 use App\Entity\Image;
 use App\Entity\Trick;
 use App\Helper\Uploader;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -13,10 +15,11 @@ class ImageService
 {
     private $params;
 
-    public function __construct(ParameterBagInterface $params, Uploader $uploader)
+    public function __construct(ParameterBagInterface $params, Uploader $uploader, EntityManagerInterface $entityManager)
     {
         $this->params = $params;
         $this->uploader = $uploader;
+        $this->entityManager = $entityManager;
     }
    
     /**
@@ -49,23 +52,28 @@ class ImageService
 
         //  IMAGES UPLOADS
         $images = $form->get('images')->getData();
+        //$images = $trick->getImages();
         //dd($images);
         if (null !== $images) {
             foreach ( $images as $image ) {
                 //dd($images);
-                $fichier = $this->uploader->uploadFile($image->getFile());
-                /* $fichier = $trick->getId().'-'.md5(uniqid()) . '.' .$image->guessExtension();
+                if(null !== $image->getFile()){
+                    $fichier = $this->uploader->uploadFile($image->getFile());
+               
+                    //$fichier = md5(uniqid()) . '.' .$image->guessExtension();
+                    /* $file=new File($image->getName());
+                    $fichier = md5(uniqid()).'.'.$file->guessExtension();
+                    $image->move(
+                        $this->params->get('images_directory'), 
+                        $fichier
+                    );  */
 
-                $image->move(
-                    $this->params->get('images_directory'), 
-                    $fichier
-                ); */
-
-                //  IMAGES INSERTION IN DB 
-                $img = new Image();
-                $img->setName($fichier);
-                
-                $trick->addImage($img);
+                    //  IMAGES INSERTION IN DB 
+                    $img = new Image();
+                    $img->setName($fichier);
+                    
+                    $trick->addImage($img);
+                }
             }
         }  
     }
@@ -91,7 +99,7 @@ class ImageService
      * @return void
      */
     public function checkSavedImages(Trick $trick,  $originalImages)
-    {
+    {//dd($originalImages, $trick->getImages());
         // remove the relationship between the tag and the Task
         foreach ($originalImages as $originalImage) {
             if (false === $trick->getImages()->contains($originalImage)) {
