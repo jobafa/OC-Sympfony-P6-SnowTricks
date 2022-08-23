@@ -4,10 +4,7 @@ namespace App\Service;
 
 use App\Entity\Trick;
 use Doctrine\ORM\EntityManagerInterface;
-//use Symfony\Component\Form\FormInterface;
-//use Symfony\Component\HttpFoundation\Request;
-//use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-//use Symfony\Component\DependencyInjection\ParameterBag\ContainerBag;
+
 
 class TrickService
 {
@@ -35,16 +32,28 @@ class TrickService
      * @return void
      */
     public function manageDeletion(Trick $trick)
-    {//dd($trick);
+    {
         try {
-            /* $this->imageService->handleImageFolderDeletion($trick); */
-            //unlink($this->params->getParameter('images_directory').'/'.$name);
+            
             $this->entityManager->remove($trick);
             $this->entityManager->flush();
         } catch (\Exception $exception) {
             throw $exception;
         }
     }
+
+    /**
+     * Handle url sluggifying.
+     *
+     * @return string
+     */
+    public function create_url_slug($string){
+
+        $slug = preg_replace('/[^A-Za-z0-9-]+/', '-', $string);
+
+        return strToLower($slug);
+
+     }
 
     
 }

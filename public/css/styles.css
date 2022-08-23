@@ -50,7 +50,7 @@ h2 {
 
 @media (max-width: 576px) {
   .container-fluid:not(.homeHeader) {
-    margin-bottom: 5rem;
+    margin-bottom: 1rem;
   }
 }
 

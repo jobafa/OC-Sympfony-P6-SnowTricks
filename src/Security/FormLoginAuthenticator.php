@@ -95,7 +95,8 @@ class FormLoginAuthenticator extends AbstractFormLoginAuthenticator
         //return new RedirectResponse($this->router->generate('homepage'));
         if($request->get('_target_path') 
         && !empty($request->get('_target_path')) 
-        && !str_contains($request->get('_target_path'), 'reinitialisation')
+        && !str_contains($request->get('_target_path'), 'reinitialisation') 
+        && !str_contains($request->get('_target_path'), 'activation') 
         && !str_contains($request->get('_target_path'), 'connexion')){
 
             return new RedirectResponse($request->get('_target_path'));

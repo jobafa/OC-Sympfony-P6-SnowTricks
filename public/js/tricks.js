@@ -44,28 +44,6 @@ $(function() {
     });
 
 
-    
-    /*-----------------------------------------------------------------------------------*/
-
-/*  /* Show trick media in small screen */
-
-/*-----------------------------------------------------------------------------------*/
-
-/* $(function () {
-    $("#showMedia").on('click', function (e) {
-        e.preventDefault();
-        $("div.show-media").removeClass('d-none');
-        $("#showMedia").addClass('d-none');
-        $("#hideMedia").removeClass('d-none');
-    });
-    $("#hideMedia").on('click', function (e) {
-        e.preventDefault();
-        $("div.show-media").addClass('d-none');
-        $("#showMedia").removeClass('d-none');
-        $("#hideMedia").addClass('d-none');
-    });
-
-}); */
  
     /* ******** trick page ****** */
 
@@ -87,22 +65,52 @@ $(function() {
     /* ******** new/edit trick page ****** */
     // Trick images upload and videos collection management
 
+//ADDED FOR TESTING
+    
+/* jQuery(document).ready(function() {
+    var $wrapper = $('.trick-image-wrapper');
+    $wrapper.on('click', '.js-remove-image', function(e) {
+        e.preventDefault();
+        $(this).closest('.js-trick-image-item')
+            .fadeOut()
+            .remove();
+    });
+}); */
+// END TESTING
+
     $(document).on("change", ".custom-file-input", function() {
         let fileName = $(this).val().replace(/\\/g, "/").replace(/.*\//, "");
         $(this).parent(".custom-file").find(".custom-file-label").text(fileName);
     });
 
+    /* function handleDeleteButtons() {
+        $("button[data-action='delete']").click(function () {
+            const target = this.dataset.target;
+            $(target).remove();
+            updateCounterImage();
+            updateCounterVideo();
+            displayCounter();
+        });
+    } */
+
     function handleDeleteButtons() {
         $("button[data-action='delete']").click(function() {
-            var target = $(this).attr("data-target");
-            $(target).parent().remove();
+            /* var target = $(this).attr("data-target");
+            $(target).parent().remove(); */
+            const target = this.dataset.target;
+            $(target).remove();
             updateCounterImage();
             updateCounterVideo();
         })
     }
 
+   /*  function updateCounterImage() {
+        const count = +$("#trick_images div.form-group").length;
+        $("#image-counter").val(count);
+    } */
+
     function updateCounterImage() {
-        var count = +$("#image-fields-list").children().length;
+        var count = +$("#image-fields-list").length;
         $("#image-counter").val(count);
     }
 
@@ -177,8 +185,8 @@ $(function() {
 
     /* ********** Passing trick infos to main image deletion modal ********* */
 
-    $("#deleteMainImageModal").on("show.bs.modal", function(e) {
-        $(this).find("#mainImage_deletion").attr("action", $(e.relatedTarget).data("action"));
+    $("#deletedefaultimageModal").on("show.bs.modal", function(e) {
+        $(this).find("#defaultImage_delete").attr("action", $(e.relatedTarget).data("action"));
         $(this).find("#csrf_deletion").attr("value", $(e.relatedTarget).data("token"));
     });
 
@@ -204,4 +212,14 @@ $(function() {
     })
 
 
+}); 
+
+//TESTING REMOVING IMAGE FROM COLLECTION TYPE
+jQuery(document).ready(function() {
+    var $wrapper = $('.js-genus-scientist-wrapper');
+    $wrapper.on('click', '.js-remove-scientist', function(e) {
+        e.preventDefault();
+        $(this).closest('.js-genus-scientist-item')
+            .remove();
+    });
 });

@@ -46,11 +46,7 @@ class UserService
             $user->setPassword($hash);
             $user->setCreatedAt(new \DateTime());
             $user->setUpdatedAt(new \DateTime());
-            /*if(!$user->getId()){
-                $user->setCreatedAt(new \DateTime());
-            }
-            $user->setUpdatedAt(new \DateTime());*/
-
+            
             $token = $this->tokenGenerator->generateToken();
             $user->setActivationToken($token);
 

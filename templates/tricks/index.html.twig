@@ -4,73 +4,39 @@
 {% endblock %}
 
 {% block body %}
-{# <div class="container-fluid mB-4 col-6">
-	
-	<div class=" justify-content-center text-center">
-		<div class="card" >
-			<div class="card-body">
-				<h5>Bienvenue sur le site communautaire des figures de snowboard !</h5>
-			</div>
-		</div>
-	</div>
-</div> #}
 <div class="container-fluid">
-	<div class="row justify-content-center"  id="tricks"> 
-	{# <div class="d-flex flex-wrap justify-content-center mb-3"  id="tricks">#}
+	<div class="row justify-content-center my-4 "  id="tricks"> 
 		{% for trick in tricks %}
 					<!-- Display Tricks -->
-	 <div class="col-12 col-md-4 col-lg-2   mx-1 mb-4  tricks-div"> 
-	{#  <div class="d-flex flex-wrap justify-content-center mb-3  tricks-div">#}
-			{#<div class="container"> #}
-			{# <tricks> 
-				<div class="card-deck"> #}
-					<div class="card" >
-						<div class="view overlay">
-							<a href="{{ path('trick_show', { 'id': trick.id, 'slug': trick.slug })}}" >
-								<img class="card-img img-fluid" src="../uploads/images/{{ trick.defaultimage }}"  alt="trick_{{ trick.title }}"/>
-								{# <a href="/trick/mute">
-									<img class="card-img-top rounded-0" src="/uploads/images/49d5e420e05f72e68ca46ba8f0128a05.jpeg" alt="Card image cap">
-								</a> #}
-							</a>
-						</div>
-						<div class="card-body ">
-
-						{#  <img src="/uploads/pictures/3e0f8423e0dd12517f9700f10817c75a.jpeg" class="rounded-circle" height="50px" width="50px"
-								alt="avatar"> #}
-							{# <div class="col-auto"> #}
-							{# <div class="col px-auto "> #}
-								<p class="card-title  my-1">{# <a href="{{ path('trick_show', { 'id': trick.id, 'slug': trick.slug })}}" class=" stretched-link"> #}{{ trick.title }}{# </a> #}</p>
-								{# <i class="far fa-clock pr-2"></i><small>26/03/2021</small> #}
-								<p class=" justify-content-center text-center">
-								{% if app.user %}
-									{#<div class="col-4 px-auto "> #}
-										<a href="{{ path('trick_edit', {id: trick.id}) }}#ajoutfigure">
-											<i class="fas fa-pencil-alt   px-2" style='font-size:20px; color:green'></i>
-										</a>
-									{% if app.user.id == trick.user.id %}
-											<i class="fas fa-transporter-empty"></i>
-											<a class="ml-2" data-toggle="modal" data-target="#trickDeleteModal" data-action="{{ path('trick_delete', {'id': trick.id})}}" data-token="{{ csrf_token('delete_trick_' ~ trick.id) }}">
-												<i class="fas fa-trash-alt   px-2" style='font-size:20px; color:red'></i>
-												{# <i class="fas fa-trash-alt"></i> #}
-											</a>
-										{#</div> #}
-									{% endif %}
-								{% endif %}
-								
-								</p>
-								{# </div> #}
-							{# </div> #}
-						</div>
-					</div>
-			{# 	</div>
-			
-			</trick> #} 
-			
+	 	<div class="col-12 col-md-4 col-lg-2   mx-1 mb-4  tricks-div"> 
+			<div class="card" >
+				<div class="view overlay">
+					<a href="{{ path('trick_show', { 'id': trick.id, 'slug': trick.slug })}}" >
+						<img class="card-img img-fluid" src="../uploads/images/{{ trick.defaultimage }}"  alt="trick_{{ trick.title }}"/>
+						
+					</a>
+				</div>
+				<div class="card-body ">
+						<p class="card-title  my-1">{{ trick.title }}</p>
+						<p class=" justify-content-center text-center">
+						{% if app.user %}
+								<a href="{{ path('trick_edit', {id: trick.id}) }}#updatetrick">
+									<i class="fas fa-pencil-alt   px-2" style='font-size:20px; color:green'></i>
+								</a>
+							{% if app.user.id == trick.user.id %}
+									<i class="fas fa-transporter-empty"></i>
+									<a class="ml-2" data-toggle="modal" data-target="#trickDeleteModal" data-action="{{ path('trick_delete', {'id': trick.id})}}" data-token="{{ csrf_token('delete_trick_' ~ trick.id) }}">
+										<i class="fas fa-trash-alt   px-2" style='font-size:20px; color:red'></i>
+									</a>
+							{% endif %}
+						{% endif %}
+						
+						</p>
+				</div>
+			</div>
 		</div>
 		{% include "tricks/_modal_deletion.html.twig" %}
 		{% endfor %}
-		
-		
 		</div> 
 		<div class="row d-flex justify-content-center pb-0"> 
 		

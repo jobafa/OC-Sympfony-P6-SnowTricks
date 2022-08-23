@@ -18,7 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 class TrickType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+    { 
+         
         $builder
             ->add('category',EntityType::class, [
                 'label'=>'Catégorie',
@@ -27,7 +28,6 @@ class TrickType extends AbstractType
             ])
             ->add('title', TextType::class, [
                 'label' => 'Nom Figure',
-                //'data_class' => null,
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Description',
@@ -40,33 +40,20 @@ class TrickType extends AbstractType
                 'required' => false,
                 'data_class' => null,
             ])
-            /* // AJOUT CHAMP "images" non lié à la db ( mapped à false)
-            ->add('images', FileType::class, [
-                'label' => "Plus d'mages ",
-                'multiple' => true,
-                'mapped' => false,
-                'required' => false,
-                'data_class' => null,
-            ]) */
+            
             // AJOUT CHAMPS "images"
+            
             ->add('images', CollectionType::class, [
                 'entry_type' => ImageType::class,
-                //'prototype' => true,
-                //'entry_options' => ['label' => false],
-                //'label' => false,
-                //'label' => "Plus d'Images ",
+                'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'delete_empty' => true,
-                'by_reference' => false,
-              /*  'mapped' => false,
-                'data_class' => null,
-                 */          
+                'by_reference' => false,        
         ])
             // AJOUT CHAMPS "videos"
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,
-                //'entry_options' => ['label' => false],
                 'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,

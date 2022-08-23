@@ -20,7 +20,7 @@ class Uploader
     /**
      * Uploading image file .
      */
-    //public function uploadFile(File $file): string
+    
     public function uploadFile(File $file): string
     {
         

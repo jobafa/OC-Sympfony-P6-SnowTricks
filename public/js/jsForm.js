@@ -1,5 +1,3 @@
-
-
 $(".btn-add").on("click", function() {
     var $collectionHolder = $($(this).data("rel"));
     var index = $collectionHolder.data("index");

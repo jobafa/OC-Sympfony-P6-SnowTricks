@@ -28,11 +28,8 @@ class ImageType extends AbstractType
                 'data-action' => 'delete',
                 'data-target' => '#trick_images___name__',
             ],
-        ]) /**/;
-            // ->add('name')
-            // ->add('videourl')
-            // ->add('trick')
-        //;
+        ]);
+           
     }
 
     public function configureOptions(OptionsResolver $resolver): void

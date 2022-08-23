@@ -27,52 +27,34 @@ class ImageService
      * @return void
      */
     public function manageImages(Trick $trick, FormInterface $form, string $dbDefaultimage)
-    {//dd($form->get('images')->getData());
+    {
         // GET DEFAULT IMAGE
-        //dd($request);
+        
         if($form->get('defaultimage')->getData() !== null){
 
             $defaultImage = $form->get('defaultimage')->getData();
             $fichier = $this->uploader->uploadFile($defaultImage);
-            /* $fichier = $trick->getUser().'-'.md5(uniqid()) . '.' .$defaultImage->guessExtension();
-            $defaultImage->move(
-                $this->params->get('images_directory'), 
-                    $fichier
-                ); */
+            
         }else{
             $fichier = $dbDefaultimage;
         }
-        //dd($trick->getUser());
-        //if (null !== $fichier) {
-            //$fichier = md5(uniqid()) . '.' .$defaultImage->guessExtension();
-           
-
-            $trick->setDefaultimage($fichier);
-        //}
-
+        
+        $trick->setDefaultimage($fichier);
+      
         //  IMAGES UPLOADS
         $images = $form->get('images')->getData();
-        //$images = $trick->getImages();
-        //dd($images);
+        
         if (null !== $images) {
             foreach ( $images as $image ) {
-                //dd($images);
+                //dd($image);
                 if(null !== $image->getFile()){
                     $fichier = $this->uploader->uploadFile($image->getFile());
                
-                    //$fichier = md5(uniqid()) . '.' .$image->guessExtension();
-                    /* $file=new File($image->getName());
-                    $fichier = md5(uniqid()).'.'.$file->guessExtension();
-                    $image->move(
-                        $this->params->get('images_directory'), 
-                        $fichier
-                    );  */
-
                     //  IMAGES INSERTION IN DB 
-                    $img = new Image();
-                    $img->setName($fichier);
+
+                    $image->setName($fichier);
                     
-                    $trick->addImage($img);
+                    $trick->addImage($image);
                 }
             }
         }  
@@ -98,21 +80,19 @@ class ImageService
      *  delete saved trick's existing images .
      * @return void
      */
-    public function checkSavedImages(Trick $trick,  $originalImages)
-    {//dd($originalImages, $trick->getImages());
+    
+    public function checkSavedImages( $formImages,  $originalImages)
+    {
         // remove the relationship between the tag and the Task
         foreach ($originalImages as $originalImage) {
-            if (false === $trick->getImages()->contains($originalImage)) {
-                // remove the Task from the Tag
-            // $originalVideo->getId()->removeElement($trick);
-
+            
+            if (false === $formImages->contains($originalImage)) {
+               
                 // if it was a many-to-one relationship, remove the relationship like this
                 $originalImage->setTrick(null);
 
                 $this->entityManager->persist($originalImage);
 
-                // if you wanted to delete the Tag entirely, you can also do that
-                // $entityManager->remove($tag);
             }
         }
     }

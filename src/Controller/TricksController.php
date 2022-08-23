@@ -8,7 +8,6 @@ use App\Entity\Trick;
 use App\Entity\Video;
 use App\Entity\Comment;
 use App\Form\TrickType;
-//use Doctrine\Common\Persistence\ObjectManager;
 use App\Form\CommentType;
 use App\Form\OthersTrickType;
 use App\Service\ImageService;
@@ -63,28 +62,16 @@ class TricksController extends AbstractController
         $limit = 5;
         $page = (int)$request->query->get("page",1);
 
-        // WORKS WITH THE  PAGINATION
-        //$tricks = $repo->getTricks($page, $limit);// MODIF DU 14 07
-
         // WORKS WITH THE LOADMORE BUTTON
        $tricks = $repo->findBy([], ['createdAt' => 'DESC']);
         
 		// get the total number of tricks
 		$totalTricks = count($tricks);
 
-        //$tricks = $repo->findAll();
         return $this->render('tricks/index.html.twig', [
             'controller_name' => 'TricksController',
             'tricks' => $tricks
         ]);
-
-        /* return $this->render('tricks/index.html.twig', [
-            'controller_name' => 'TricksController',
-            'tricks' => $tricks,
-            'totaltricks' => $totalTricks,
-            'limit' => $limit,
-            'page' => $page
-        ]); */
 
     }
     
@@ -100,12 +87,10 @@ class TricksController extends AbstractController
             // redirect to login form
             return $this->redirectToRoute('security_login', ['_fragment' => 'login']);
         }
-        //if(!$trick){
-            $trick = new Trick();
-            $dbDefaultimage = "";
-        //}
-        
-        
+
+        $trick = new Trick();
+        $dbDefaultimage = "";
+  
         $form = $this->createForm(TrickType::class, $trick);
                
         $form->handleRequest($request);
@@ -128,23 +113,13 @@ class TricksController extends AbstractController
 
             $this->addFlash('success', 'La Figure a été ajoutée avec succès !');
 
-            //return $this->redirectToRoute('trick_show', ['id' => $trick->getId()]);
             return $this->redirectToRoute('app_tricks', ['_fragment' => 'tricks']);
         }
-
-        /* else{
-            $request->getSession()->set('sessionimage', $dbDefaultimage);
-        } */
-        //dd($trick);
-      /* return $this->render('tricks/edit.html.twig', [
-            'trick' => $trick,
-            'form' => $form->createView(),
-        ]);*/
 
           return $this->render('tricks/create.html.twig', [
             'formTrick' => $form->createView(),
             'trick' => $trick,
-            //'editMode' => $trick->getId() !== null
+
         ]); 
     }
 
@@ -153,82 +128,67 @@ class TricksController extends AbstractController
     */
 
     public function updateTrick(Trick $trick = null,  Request $request, EntityManagerInterface  $manager): Response
-    {  //dd($request);
+    {  
         if(!$this->getUser()){
             $this->addFlash('danger', 'Vous devez vous connecter pour effectuer cette tache !');
-
             // redirect to login form
             return $this->redirectToRoute('security_login', ['_fragment' => 'login']);
+        }
+
+        if(!$trick){
+            $trick = new Trick();
+            $dbDefaultimage = "";
+        }else{
+            //SAVE THE NAME OF Trick DEFAULT IMAGE and Trick Title
+            $dbDefaultimage = $trick->getDefaultimage();
+            $dbTitle = $trick->getTitle();
         }
 
         // DB Saved trick videos collection
         $originalVideos = $this->videoService->savedVideos($trick);
         // DB Saved trick images collection
         $originalImages = $this->imageService->savedImages($trick);
-        
-        if(!$trick){
-            $trick = new Trick();
-            $dbDefaultimage = "";
-        }else{
-            //SAVE THE NAME OF DEFAULT IMAGE 
-            $dbDefaultimage = $trick->getDefaultimage();
-            //$dbTitle = $trick->getTitle();
-            //dd($dbTitle);
-        }
-        
-        if($this->getUser() == $trick->getUser()){
-            $form = $this->createForm(TrickType::class, $trick);
-         }else{
-            $form = $this->createForm(OthersTrickType::class, $trick);
-        } 
 
+        $form = $this->createForm(TrickType::class, $trick);
+ 
         $form->handleRequest($request);
-        //dd($dbTitle);
+
         if($form->isSubmitted() && $form->isValid()){
-            //$trick->setTitle($dbTitle);
+            //dd($dbTitle,$form->get('title')->getData());
+            if( ($this->getUser( ) != $trick->getUser()) && ($dbTitle != $form->get('title')->getData())){
+                $this->addFlash('danger', 'Vous ne pouvez pas modifier le nom de la figure !');
+           
+                return $this->render('tricks/update.html.twig', [
+                    
+                     'formUpdateTrick' => $form->createView(),
+                     'trick' => $trick,
+                     
+                 ]); 
+            }
+            
             //Remove videos from $originalVideos
             $this->videoService->checkSavedVideos($trick, $originalVideos);
 
             //Remove images from $originalImages
-             //dd($form->getData());
-            $this->imageService->checkSavedImages($form->getData(), $originalImages);//ADDED FOR IMAGES DELETION TESTS 
-            //$this->imageService->checkSavedImages($trick, $originalImages);
+            $this->imageService->checkSavedImages($form['images']->getData(), $originalImages);//ADDED FOR IMAGES DELETION TESTS 
 
-        
+            //HANDELING NEW IMAGES AND VIDEOS
             $this->imageService->manageImages($trick, $form, $dbDefaultimage);
             $this->videoService->manageVideos($trick, $form);
 
-            /* if(!$trick->getId()){
-                $trick->setCreatedAt(new \DateTime());
-                
-            } */
             $trick->setUpdatedAt(new \DateTime());
-            //dd($dbTitle);
-            //$trick->setTitle($dbTitle);
-            // $trick->setUser($this->getUser());
-            
-            // $manager->persist($trick);
             $manager->flush();
 
             $this->addFlash('success', 'La Figure a été mise à jour avec succès !');
 
-            //return $this->redirectToRoute('trick_show', ['id' => $trick->getId()]);
             return $this->redirectToRoute('app_tricks', ['_fragment' => 'tricks']);
-        }/* else{
-            $request->getSession()->set('sessionimage', $dbDefaultimage);
-        } */
-        //dd($trick);
-      /* return $this->render('tricks/edit.html.twig', [
-            'trick' => $trick,
-            'form' => $form->createView(),
-            
-            
-        ]);*/
+        }
+       
           return $this->render('tricks/update.html.twig', [
-           // return $this->render('tricks/edit.html.twig', [
+
             'formUpdateTrick' => $form->createView(),
             'trick' => $trick,
-            //'editMode' => $trick->getId() !== null
+
         ]); 
     }
 
@@ -238,13 +198,13 @@ class TricksController extends AbstractController
     
     public function show( Trick $trick, CommentRepository $commentRepository,  Request $request, EntityManagerInterface  $manager, string $slug ): Response  // ParamConverter : conversion parametre en objet
     {
-        
-        if($trick->getSlug() !== $slug){
+        if($this->trickService->create_url_slug($trick->getTitle()) !== $slug){
             return $this->redirectToRoute('trick_show', [
                 'id' => $trick->getId(),
-                'slug' => $trick->getSlug(),
+                'slug' => $this->trickService->create_url_slug($trick->getTitle()),
             ], 301);
         }
+
         $comment = new Comment();
 
         $form = $this->createForm(CommentType::class, $comment);
@@ -260,23 +220,21 @@ class TricksController extends AbstractController
             $manager->persist($comment);
             $manager->flush();
 
-            //return $this->redirectToRoute('trick_show', ['id' => $trick->getId()]);
             return $this->redirectToRoute('trick_show', [
                 'id' => $trick->getId(),
-                'slug' => $trick->getSlug(),
+                'slug' => $this->trickService->create_url_slug($trick->getTitle()),
+                
             ], 301);
         }
-        $limit = 4;
-        //$paginatedResult = $repo->getTricks(1);
+        $limit = 10;
+        
         $page = (int)$request->query->get("page",1);
 
         // WORKS WITH THE  PAGINATION
         $comments = $commentRepository->getComments($trick->getId(), $page, $limit);
-        //$comments = $commentRepository->findBy(['Trick' => '$trick->getId()'], ['createdAt' => 'DESC'], $page, $limit);
-        //dd($comments);
-        // get the total number of comments
+        
 		$totalComments = count($comments);
-        //dd($totalComments);
+        
         return $this->render('tricks/show.html.twig', [
             'trick' => $trick,
             'commentForm' => $form->createView(),
@@ -300,11 +258,7 @@ class TricksController extends AbstractController
             $form = $this->createForm(OthersTrickType::class, $trick);
         }
         $form->handleRequest($request);
- //dd($trick->getDefaultimage());
-// dd($request);
-        //if ($this->isCsrfTokenValid('delete_'.$defaultImage, $submittedToken)) {
-            //$name = $image->getName();
-            //$defaultImage = $form->get('defaultimage')->getData();
+ 
             $defaultImage = $trick->getDefaultimage();
             if($defaultImage !== ""){
                 $trick->setDefaultimage("");
@@ -313,45 +267,36 @@ class TricksController extends AbstractController
                 
                 unlink($this->getParameter('images_directory').'/'.$defaultImage);
             }
-            //$trickRepository->remove($image, true);// DELETE FROM DB
-
-            //return new JsonResponse(['success' => 1]);
             return $this->render('tricks/update.html.twig', [
                 'formUpdateTrick' => $form->createView(),
                 'trick' => $trick,
-                //'editMode' => $trick->getId() !== null
+                
             ]); 
-        /* }else{
-            return new JsonResponse(['error' => 'Token Invalide'], 400);
-        } */
-
+       
     }   
 
     /**
      * @Route("/suppression/image/{id}", name="trick_delete_image", methods={"DELETE"})
      */
     public function deleteImage(Request $request, Image $image, ImageRepository $imageRepository): Response
-    {//dd(json_decode($request->getContent(), true));
+    {
         if(isset($request->request))
         {
             $data = json_decode($request->getContent(), true);
-            //dd($data);
-        
+
         $submittedToken = $request->request->get('_token');
-        dd($request);
-        //dd($image->getTrick());
+        
         }
         if ($this->isCsrfTokenValid('delete'.$image->getId(), $submittedToken)) {
             $name = $image->getName();
             unlink($this->getParameter('images_directory').'/'.$name);
 
             $imageRepository->remove($image, true);// DELETE FROM DB
-
-            //return new JsonResponse(['success' => 1]);
+            
             return $this->render('tricks/update.html.twig', [
                 'formUpdateTrick' => $form->createView(),
                 'trick' => $image->getTrick(),
-                //'editMode' => $trick->getId() !== null
+                
             ]); 
         }else{
             return new JsonResponse(['error' => 'Token Invalide'], 400);
@@ -367,11 +312,9 @@ class TricksController extends AbstractController
         $data = json_decode($request->getContent(), true);
        
         $submittedToken = $request->request->get('_token');
- //dd($submittedToken);
+ 
         if ($this->isCsrfTokenValid('delete'.$video->getId(), $submittedToken)) {
-            /* $name = $image->getName();
-            unlink($this->getParameter('images_directory').'/'.$name); */
-
+           
             $videoRepository->remove($video, true);// DELETE FROM DB
 
             return new JsonResponse(['success' => 1]);
@@ -389,17 +332,15 @@ class TricksController extends AbstractController
      * @return Response
      */
     public function delete(Request $request, Trick $trick)
-    {//dd($trick);
+    {
         if ($this->isCsrfTokenValid('delete_trick_'.$trick->getId(), $request->get('_token'))) {
             
             $this->trickService->manageDeletion($trick);
 
-            //if ($trick->getUser() === $this->getUser()) {
                 $this->addFlash('success', 'La figure a été supprimé avec succès !');
 
                 return $this->redirectToRoute('app_tricks', ['_fragment' => 'tricks']);
-           // }
-           
+
         }
         $this->addFlash('error', 'Erreur lors de l\'opration !');
 
