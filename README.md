@@ -1,4 +1,5 @@
 # OC-Sympfony-P6-SnowTricks
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/07ac88bedcaf4d7aad92ec4eb8752733)](https://www.codacy.com/gh/jobafa/OC-Sympfony-P6-SnowTricks/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jobafa/OC-Sympfony-P6-SnowTricks&amp;utm_campaign=Badge_Grade)
 OpenClassrooms Projet 6 : parcours développeur d'application PHP/Symfony
 
 SnowTricks
