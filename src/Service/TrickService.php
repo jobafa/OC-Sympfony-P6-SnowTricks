@@ -47,7 +47,7 @@ class TrickService
      *
      * @return string
      */
-    public function create_url_slug($string){
+    public function urlSlug($string){
 
         $slug = preg_replace('/[^A-Za-z0-9-]+/', '-', $string);
 

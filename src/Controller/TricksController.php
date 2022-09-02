@@ -198,7 +198,7 @@ class TricksController extends AbstractController
     
     public function show( Trick $trick, CommentRepository $commentRepository,  Request $request, EntityManagerInterface  $manager, string $slug ): Response  // ParamConverter : conversion parametre en objet
     {
-        if($this->trickService->create_url_slug($trick->getTitle()) !== $slug){
+        if($this->trickService->urlSlug($trick->getTitle()) !== $slug){
             return $this->redirectToRoute('trick_show', [
                 'id' => $trick->getId(),
                 'slug' => $this->trickService->create_url_slug($trick->getTitle()),
@@ -222,7 +222,7 @@ class TricksController extends AbstractController
 
             return $this->redirectToRoute('trick_show', [
                 'id' => $trick->getId(),
-                'slug' => $this->trickService->create_url_slug($trick->getTitle()),
+                'slug' => $this->trickService->urlSlug($trick->getTitle()),
                 
             ], 301);
         }
@@ -248,7 +248,7 @@ class TricksController extends AbstractController
      /**
      * @Route("/suppression/imagePrincipale/{id}", name="trick_defaultImage_delete", methods={"GET", "POST", "DELETE"})
      */
-    public function deleteDefaultImage(Trick $trick, Request $request, EntityManagerInterface  $manager): Response
+   /*  public function deleteDefaultImage(Trick $trick, Request $request, EntityManagerInterface  $manager): Response
     {
         $submittedToken = $request->request->get('_token');// does not work ???????????
 
@@ -273,7 +273,7 @@ class TricksController extends AbstractController
                 
             ]); 
        
-    }   
+    }    */
 
     /**
      * @Route("/suppression/image/{id}", name="trick_delete_image", methods={"DELETE"})
@@ -309,7 +309,7 @@ class TricksController extends AbstractController
      */
     public function deleteVideo(Request $request, Video $video, VideoRepository $videoRepository): Response
     {
-        $data = json_decode($request->getContent(), true);
+        json_decode($request->getContent(), true);
        
         $submittedToken = $request->request->get('_token');
  
