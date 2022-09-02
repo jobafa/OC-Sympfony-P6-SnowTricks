@@ -2,14 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Image;
 use App\Entity\Trick;
 use App\Entity\Video;
 use App\Entity\Comment;
 use App\Form\TrickType;
 use App\Form\CommentType;
-use App\Form\OthersTrickType;
 use App\Service\ImageService;
 use App\Service\TrickService;
 use App\Service\VideoService;
@@ -21,10 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TricksController extends AbstractController
@@ -154,7 +149,7 @@ class TricksController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
-            //dd($dbTitle,$form->get('title')->getData());
+
             if( ($this->getUser( ) != $trick->getUser()) && ($dbTitle != $form->get('title')->getData())){
                 $this->addFlash('danger', 'Vous ne pouvez pas modifier le nom de la figure !');
            
@@ -244,36 +239,6 @@ class TricksController extends AbstractController
             'page' => $page
         ]);
     }
-
-     /**
-     * @Route("/suppression/imagePrincipale/{id}", name="trick_defaultImage_delete", methods={"GET", "POST", "DELETE"})
-     */
-   /*  public function deleteDefaultImage(Trick $trick, Request $request, EntityManagerInterface  $manager): Response
-    {
-        $submittedToken = $request->request->get('_token');// does not work ???????????
-
-        if($this->getUser() == $trick->getUser()){
-            $form = $this->createForm(TrickType::class, $trick);
-        }else{
-            $form = $this->createForm(OthersTrickType::class, $trick);
-        }
-        $form->handleRequest($request);
- 
-            $defaultImage = $trick->getDefaultimage();
-            if($defaultImage !== ""){
-                $trick->setDefaultimage("");
-                $manager->persist($trick);
-                $manager->flush();
-                
-                unlink($this->getParameter('images_directory').'/'.$defaultImage);
-            }
-            return $this->render('tricks/update.html.twig', [
-                'formUpdateTrick' => $form->createView(),
-                'trick' => $trick,
-                
-            ]); 
-       
-    }    */
 
     /**
      * @Route("/suppression/image/{id}", name="trick_delete_image", methods={"DELETE"})
