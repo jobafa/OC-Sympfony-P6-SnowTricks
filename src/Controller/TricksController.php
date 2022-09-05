@@ -196,7 +196,7 @@ class TricksController extends AbstractController
         if($this->trickService->urlSlug($trick->getTitle()) !== $slug){
             return $this->redirectToRoute('trick_show', [
                 'id' => $trick->getId(),
-                'slug' => $this->trickService->create_url_slug($trick->getTitle()),
+                'slug' => $this->trickService->urlSlug($trick->getTitle()),
             ], 301);
         }
 
